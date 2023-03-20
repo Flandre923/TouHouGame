@@ -20,7 +20,7 @@ export default class MapBounds  {
     }
     //获得地图对象
     private getMapNode(){
-        this.mapNode = cc.find("/map");
+        this.mapNode = cc.find("/Canvas/map");
     }
     //计算地图边界
     getBounds(playerRadius){
@@ -31,6 +31,6 @@ export default class MapBounds  {
         const bottomBoundary = this.mapNode.y - mapSize.height / 2 + playerRadius;
         const topBoundary = this.mapNode.y + mapSize.height / 2 - playerRadius;
         // 迷之原因 地图的坐标计算向右上偏移了300，
-        return [topBoundary-300,bottomBoundary-300,leftBoundary-300,rightBoundary-300]
+        return [topBoundary,bottomBoundary,leftBoundary,rightBoundary]
     }
 }

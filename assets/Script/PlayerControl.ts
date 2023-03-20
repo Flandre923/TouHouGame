@@ -10,12 +10,21 @@ export default class PlayerControl extends cc.Component {
     // 人物移动速度，x方向和y方向
     @property(cc.Integer)
     private speed:number = 150
-
+    // 人物血量
+    playerHp:number = 2
+    // 人物最大血量
+    playerMaxHp:number = 10
+    // 人物最大的可以使用技能次数
+    playerSpell = 0
+    playerMaxSpell = 10
+    // 人物射击火力
+    playerShotFire = 0
+    playerShotFireMax = 4
     // 子弹预制体
     @property(cc.Prefab)
     bulletPrefab:cc.Prefab = null;
     // 控制射击间隔
-    shootInterval:number  = 0.2;
+    shootInterval:number  = 0.5;
     // 射击定时器
     shootTimer:number = 0;
 
@@ -29,7 +38,14 @@ export default class PlayerControl extends cc.Component {
         this.shotBullet(dt)
         // 人物动画播放
         this.playAnime(dt)
+        // 设置摄像机跟随
+        this.setCreamPos()
 
+    }
+    // 设置摄像机跟随任务
+    setCreamPos(){
+        cc.Camera.main.node.x = this.node.x;
+        cc.Camera.main.node.y = this.node.y;
     }
 
     // 播放动画
