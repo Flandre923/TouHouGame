@@ -24,7 +24,7 @@ export default class PlayerControl extends cc.Component {
     @property(cc.Prefab)
     bulletPrefab:cc.Prefab = null;
     // 控制射击间隔
-    shootInterval:number  = 0.5;
+    shootInterval:number  = 0.2;
     // 射击定时器
     shootTimer:number = 0;
 
@@ -40,6 +40,8 @@ export default class PlayerControl extends cc.Component {
         this.playAnime(dt)
         // 设置摄像机跟随
         this.setCreamPos()
+        // 人物动画播放
+        this.playAnime(dt)
 
     }
     // 设置摄像机跟随任务
@@ -52,20 +54,29 @@ export default class PlayerControl extends cc.Component {
     playAnime(dt){
         if(Input.Instance.horizontal == 1){
             // 播放向右行走的动画
+            this.node.getComponent(cc.Animation).play("PlayerRightWalk")
         }else if(Input.Instance.horizontal == -1){
             // 播放像左行走的动画
+            this.node.getComponent(cc.Animation).play("PlayerLeftWalk")
         }else if(Input.Instance.vertical == 1){
             // 播放向上的动画
+            this.node.getComponent(cc.Animation).play("PlayerUpWalk")
         }else if(Input.Instance.vertical == -1){
+            this.node.getComponent(cc.Animation).play("PlayerDownWalk")
             // 播放向下行走的动画
         }else if(Input.Instance.horizontal == 0 &&  Input.Instance.currentDirection === PlayerDirection.Right){
+            this.node.getComponent(cc.Animation).stop('PlayerRightWalk')
             //播发右闲置动画
         }else if(Input.Instance.horizontal == 0 && Input.Instance.currentDirection === PlayerDirection.Left){
             // 播发左闲置动画
+            this.node.getComponent(cc.Animation).stop('PlayerLeftWalk')
         }else if(Input.Instance.vertical == 0 && Input.Instance.currentDirection === PlayerDirection.Up){
             //播发上闲置动画
+            this.node.getComponent(cc.Animation).stop('PlayerUpWalk')
         }else if(Input.Instance.vertical == 0 && Input.Instance.currentDirection === PlayerDirection.Down){
             //播发下闲置动画
+            this.node.getComponent(cc.Animation).stop('PlayerDownWalk')
+
         }
     }
     //角色移动
@@ -92,6 +103,10 @@ export default class PlayerControl extends cc.Component {
         this.node.y += this.speed * dt * Input.Instance.vertical
     }
 
+    // 人物死亡
+    die(){
+
+    }
     // 人物半径
     getplayerRadius(){
         return  this.node.width / 2;
