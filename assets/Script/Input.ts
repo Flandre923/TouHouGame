@@ -17,6 +17,8 @@ export default class Input{
     isShoot:number = 0;
     // 记录当前玩家朝向
     currentDirection: PlayerDirection = PlayerDirection.Down;
+    // 鼠标点击的位置
+    mousePos:cc.Vec2;
 
     static get Instance(){
         if(this.instance == null){
@@ -40,8 +42,6 @@ export default class Input{
             }else if (event.keyCode == cc.macro.KEY.d){
                 this.horizontal = 1;
                 this.setCurrentDirection(PlayerDirection.Right);
-            }else if (event.keyCode == cc.macro.KEY.j){
-                this.isShoot = 1;
             }
         })
 
@@ -55,10 +55,27 @@ export default class Input{
                 this.horizontal = 0;
             }else if (event.keyCode == cc.macro.KEY.d && this.horizontal == 1){
                 this.horizontal = 0;
-            }else if ( event.keyCode == cc.macro.KEY.j  && this.isShoot ==1){
-                this.isShoot = 0;
             }
         })
+
+        let canvas = cc.find("Canvas").getComponent(cc.Canvas);
+
+        // 鼠标按下事件
+        canvas.node.on(cc.Node.EventType.MOUSE_DOWN, (event:cc.Event.EventMouse)=>{
+            this.isShoot =1
+        });
+        // 鼠标抬起事件
+        canvas.node.on(cc.Node.EventType.MOUSE_UP, (event:cc.Event.EventMouse)=>{
+             // 清除方向向量
+            this.mousePos = null;
+            // 清除标志位
+            this.isShoot = 0;
+        });
+        //鼠标移动事件
+        canvas.node.on(cc.Node.EventType.MOUSE_MOVE, (event:cc.Event.EventMouse)=>{
+            // 获取鼠标的位置（世界坐标）
+            this.mousePos  = event.getLocation();
+        });
     }
 
     // 更改玩家朝向

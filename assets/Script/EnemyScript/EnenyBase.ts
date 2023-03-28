@@ -10,6 +10,10 @@ export default class EnemyBase extends cc.Component {
     // 拥有的符卡类型及符卡的顺序
 
     // 根据符卡进行行动
+    // 玩家对象
+    player:cc.Node;
+    // 对象池
+    enemyPool:cc.NodePool
 
 
     // onLoad () {}

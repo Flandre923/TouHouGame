@@ -27,10 +27,14 @@ export default class PlayerControl extends cc.Component {
     shootInterval:number  = 0.2;
     // 射击定时器
     shootTimer:number = 0;
+    // 射击方向
+    shootDirection:cc.Vec2;
 
     start () {
     }
-
+    onLoad() {
+       
+    }
     update (dt) {
         // 人物移动
         this.move(dt)
@@ -83,7 +87,7 @@ export default class PlayerControl extends cc.Component {
     move(dt){
         // 计算玩家可以移动的范围
         // 上下左右
-        let bounds =  MapBounds.Instance.getBounds(this.getplayerRadius())
+        let bounds =  MapBounds.Instance.getBounds(this.getPlayerRadius())
 
         if (this.node.x < bounds[2]) {
             this.node.x = bounds[2];
@@ -108,8 +112,20 @@ export default class PlayerControl extends cc.Component {
 
     }
     // 人物半径
-    getplayerRadius(){
+    getPlayerRadius(){
         return  this.node.width / 2;
+    }
+
+    compteShotDirection () {
+        let playerPos = this.node.convertToWorldSpaceAR(cc.Vec2.ZERO);
+        // 计算玩家到鼠标的方向向量（归一化）
+        let direction:cc.Vec2 = cc.v2(1,0);
+        if(Input.Instance.mousePos != null){
+            direction = Input.Instance.mousePos.sub(playerPos).normalize();
+            return direction
+        }
+        // 将方向向量保存到一个属性中，供射击函数使用
+        return direction;
     }
 
     // 角色射击
@@ -117,12 +133,15 @@ export default class PlayerControl extends cc.Component {
         if(Input.Instance.isShoot == 1){
             this.shootTimer += dt;
             if(this.shootTimer >= this.shootInterval){
+                // 获得子弹预设体
                 let bulletNode = cc.instantiate(this.bulletPrefab);
-                let pos:cc.Vec2 = this.getPlayerDirection()
+                // 计算子弹射击方向
+                let pos:cc.Vec2 = this.compteShotDirection();
+                // 设置创建子弹的父容器
                 bulletNode.parent = this.node.parent;
-                let playerDirection = this.getPlayerDirection()
                 // 根据玩家的方向调整子弹的方向
-                this.adjustBulletDirection(playerDirection,bulletNode)
+                bulletNode.angle = -cc.misc.radiansToDegrees(pos.signAngle(cc.v2(1,0)))
+                //
                 bulletNode.position = cc.v3(this.node.x+20*pos.x,this.node.y+20*pos.y,this.node.z);
                 bulletNode.getComponent(BulletControl).speed = 100
                 bulletNode.getComponent(BulletControl).direction = pos
@@ -136,35 +155,6 @@ export default class PlayerControl extends cc.Component {
         //     bullet.x = this.node.x
         //     bullet.y = this.node.y + 60;
         // },0.5)
-    }
-
-    adjustBulletDirection(playerDirection,bulletNode){
-        if((playerDirection.x == 0 && playerDirection.y == -1)
-            || (playerDirection.x == 0 && playerDirection.y ==1)){
-            bulletNode.angle = 90
-        }else if(playerDirection.x==1 && playerDirection.y == 1){
-            bulletNode.angle = 45
-        } else if(playerDirection.x==1 && playerDirection.y == -1){
-            bulletNode.angle = -45
-        } else if(playerDirection.x==-1 && playerDirection.y == 1){
-            bulletNode.angle = 135
-        } else if(playerDirection.x==-1 && playerDirection.y == -1){
-            bulletNode.angle = -135
-        } 
-    }
-
-    getPlayerDirection(){
-        if(Input.Instance.horizontal == 1 || Input.Instance.vertical ==1){
-            return cc.v2(Input.Instance.horizontal,Input.Instance.vertical)
-        }else if(Input.Instance.currentDirection == PlayerDirection.Down){
-            return cc.v2(0,-1)
-        }else if(Input.Instance.currentDirection == PlayerDirection.Up){
-            return cc.v2(0,1)
-        }else if(Input.Instance.currentDirection == PlayerDirection.Left){
-            return cc.v2(-1,0)
-        }else if(Input.Instance.currentDirection == PlayerDirection.Right){
-            return cc.v2(1,0)
-        }
     }
 
     onDestroy () {

@@ -1,5 +1,6 @@
-const {ccclass, property} = cc._decorator;
+import SmallSpirit from "./SmallSripit";
 
+const {ccclass, property} = cc._decorator;
 @ccclass
 export default class EnemyManager extends cc.Component {
 
@@ -17,19 +18,31 @@ export default class EnemyManager extends cc.Component {
     currentWave = 1;
     // 当前生成了多少只怪物
     currentNumberOfMonster = 0;
-    // 待定的参数
-    bossMonsterType = 'boss';
-    monsterTypes = ['type1', 'type2', 'type3'];
+    // 参数怪物的距离玩家多远
+    distance=100
+    // 生成对象的预制体
+    @property(cc.Prefab)
+    smallSripit:cc.Prefab;
     // 玩家
     @property(cc.Node)
     player:cc.Node = null;
-    onLoad () {}
-
-    start () {
-
+    // 敌人池
+    enemyPool:cc.NodePool = null;
+    onLoad () {
+        
     }
 
-    update (dt) {}
+    start () {
+       // 循环10次
+        let nodepool = new cc.NodePool();
+        for (let i = 0; i < this.bossWaveNumber; i++) {
+            this.generateMonster(this.player,this.smallSripit,nodepool)
+        }
+    }
+
+    update (dt) {
+        
+    }
 
     // 每次生成怪物的个间隔数目和生成的次数
     genMonsterTimeAndNumber(time:number,count:number){
@@ -45,8 +58,32 @@ export default class EnemyManager extends cc.Component {
             return monsterNumber
         }
     }
-    generateMonster(playerPosition: cc.Vec2, mapSize: cc.Size, waveNumber: number){
-
+    // 根据玩家的位置获得敌人的位置和方向
+    generateEnemyPositionAndDirection(player: cc.Node,distance:number){
+        let playerPos = player.getPosition();
+        // 获得一个随机的角度
+        let angle = Math.random() * Math.PI * 2;
+        let enemyX = playerPos.x + Math.cos(angle) * distance;
+        let enemyY = playerPos.y + Math.sin(angle) * distance;
+        let enemyPos = new cc.Vec2(enemyX, enemyY);
+        // 获得玩家相对敌人的方向
+        let enemyDir = playerPos.sub(enemyPos).normalize();
+        return {position: enemyPos, direction: enemyDir};
+    }
+    // 产生怪物
+    generateMonster(player: cc.Node, enemyPrefab: cc.Prefab, enemyPool: cc.NodePool){
+        let enemy: cc.Node = null;
+        if (enemyPool.size() > 0) {
+            enemy = enemyPool.get();
+        } else {
+            enemy = cc.instantiate(enemyPrefab);
+        }
+        let {position, direction} = this.generateEnemyPositionAndDirection(player,this.distance);
+        enemy.setPosition(position);
+        // 给敌人设置方向
+        enemy.angle = -cc.misc.radiansToDegrees(Math.atan2(direction.y, direction.x));
+        this.node.addChild(enemy);
+        enemy.getComponent(SmallSpirit).init(player, enemyPool);
     }
     // 判断是否在地图内
     isInMap(position: cc.Vec2, mapSize: Array<number>): boolean {
