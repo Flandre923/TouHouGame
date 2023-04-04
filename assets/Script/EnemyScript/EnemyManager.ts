@@ -40,7 +40,6 @@ export default class EnemyManager extends cc.Component {
         // this.generateMonster(this.player,this.smallSripit,this.enemyPool)
 
         this.schedule(()=>{
-            console.log("循环中")
             if (this.currentNumberOfMonster > 0){
                 this.generateMonster();
                 this.currentNumberOfMonster --;
@@ -49,6 +48,7 @@ export default class EnemyManager extends cc.Component {
                 if(this.checkWaveClear()){
                     if(this.currentWave % this.bossWaveNumber == 0){
                         this.generateBoss();
+                        this.currentLivEenemyNumber++;
                     }else{
                         this.currentWave ++;
                         this.currentNumberOfMonster = this.getMaxMonstersPerWave(this.currentWave);
@@ -130,7 +130,7 @@ export default class EnemyManager extends cc.Component {
         if(position.y >= mapSize[0]){
             position.y = mapSize[0]
         }else if(position.y > mapSize[1]){
-            position.y <= mapSize[1]
+            position.y = mapSize[1]
         }
         return position
     }
