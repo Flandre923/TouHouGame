@@ -4,7 +4,7 @@ const {ccclass, property} = cc._decorator;
 @ccclass
 export default class SmallSpirit extends EnemyBase{
 
-
+    currentDown:Function;
     // onLoad () {}
 
     start () {
@@ -27,7 +27,7 @@ export default class SmallSpirit extends EnemyBase{
         this.enemyPool = enemyPool;
         //
         this.health = 10;
-        this.moveSpeed = 1;
+        this.moveSpeed = 0.5;
         this.node.active = true
 
     }
@@ -63,6 +63,7 @@ export default class SmallSpirit extends EnemyBase{
     onDie(){
         // 死亡动画加到这里
         this.enemyPool.put(this.node)
+        this.currentDown()
     }
 
 }

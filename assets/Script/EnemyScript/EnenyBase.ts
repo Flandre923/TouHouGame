@@ -14,6 +14,7 @@ export default class EnemyBase extends cc.Component {
     player:cc.Node;
     // 对象池
     enemyPool:cc.NodePool
+    // 死亡函数
 
 
     // onLoad () {}
