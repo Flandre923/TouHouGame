@@ -1,3 +1,4 @@
+import SmallSpirit from "./EnemyScript/SmallSripit";
 import MapBounds from "./MapBounds";
 
 const {ccclass, property} = cc._decorator;
@@ -10,8 +11,14 @@ export default class BulletControl extends cc.Component {
 
     @property(cc.Float)
     public speed: number = 500.0;
+    // 子弹伤害
+    @property(cc.Integer)
+    public damage: number = 2;
 
-    // onLoad () {}
+    onLoad () {
+        // 开启碰撞检测
+        cc.director.getPhysicsManager().enabled = true;
+    }
     start () {
     }
     update(dt) {
@@ -43,4 +50,33 @@ export default class BulletControl extends cc.Component {
         return  this.node.width / 2;
     }
 
+    // 射线碰撞相关的内容
+    // testShotLineCollision() {
+    //     // 打出一条射线
+    //     let res = cc.director.getPhysicsManager().rayCast(this.node.getPosition(),cc.v2(this.node.x,this.node.y+100),cc.RayCastType.Closest);
+    //     for (let i = 0; i < res.length; i++) {
+    //         let res1 = res[i];
+    //         // 碰撞的对象
+    //         //res1.collider
+    //         //res1.point
+    //         //res1.normal
+    //     }
+    // }
+
+    // 碰撞开始
+    onBeginContact(contact, self, other) {
+        // 得到碰撞点
+        //let contactPoint = contact.getWorldManifold().points;
+        // 法线
+        //let normal = contact.getWorldManifold().normal;
+        //
+        if(other.node.name == "SmallSpirit"){
+            // 调用敌人受到伤害的方法
+            other.node.getComponent(SmallSpirit).onHit(this.damage);
+            this.node.destroy();
+        }
+    }
+    // 碰撞结束
+    onEndContact(contact, self, other) {
+    }
 }

@@ -25,7 +25,15 @@ export default class PlayerManager extends cc.Component {
     // 设计火力显示节点
     @property(cc.Node)
     shotFireNode:cc.Node
+    // 设计显示波次节点
+    @property(cc.Node)
+    waveEnemyNode;
+    // 设计显示剩余敌人节点
+    @property(cc.Node)
+    surplusEnemyNode:cc.Node
     start () {
+    }
+    onload(){
     }
 
     update (dt) {
@@ -67,6 +75,14 @@ export default class PlayerManager extends cc.Component {
     }
 
     // 显示分数
+    showScore(){
+        this.scoreNode.children[0].getComponent(cc.Label).string = this.score+""
+    }
+    // 显示波次
+    showScore(){
+        this.scoreNode.children[0].getComponent(cc.Label).string = this.score+""
+    }
+    // 显示剩余人数
     showScore(){
         this.scoreNode.children[0].getComponent(cc.Label).string = this.score+""
     }

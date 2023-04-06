@@ -33,7 +33,10 @@ export default class PlayerControl extends cc.Component {
     start () {
     }
     onLoad() {
-       
+        // 开启碰撞检测
+        cc.director.getPhysicsManager().enabled = true;
+
+        console.log("PlayerControl onLoad"+cc.director.getPhysicsManager().enabled);
     }
     update (dt) {
         // 人物移动
@@ -108,9 +111,21 @@ export default class PlayerControl extends cc.Component {
     }
 
     // 人物死亡
-    die(){
+    onDie(){
 
     }
+    // 人物受到攻击
+    onHit(damage:number):void{
+        this.playerHp -= damage;
+        if(this.playerHp <= 0){
+            this.onDie();
+        }
+    }
+    // 人物吃道具
+    onEatItem(other){
+
+    }
+    // 
     // 人物半径
     getPlayerRadius(){
         return  this.node.width / 2;
@@ -161,6 +176,15 @@ export default class PlayerControl extends cc.Component {
     }
 
 
+    // 开始碰撞
+    onBeginContact(contact, self, other) {
+
+    }
+
+
+    // 碰撞结束
+    onEndContact(contact, self, other) {
+    }
 
 
 }

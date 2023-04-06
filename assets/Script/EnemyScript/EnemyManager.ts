@@ -1,4 +1,3 @@
-import Input from "../Input";
 import MapBounds from "../MapBounds";
 import SmallSpirit from "./SmallSripit";
 

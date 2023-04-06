@@ -5,7 +5,8 @@ const {ccclass, property} = cc._decorator;
 export default class SmallSpirit extends EnemyBase{
 
     currentDown:Function;
-    // onLoad () {}
+    onLoad () {
+    }
 
     start () {
         // 初始化一些属性和组件
@@ -27,7 +28,7 @@ export default class SmallSpirit extends EnemyBase{
         this.enemyPool = enemyPool;
         //
         this.health = 10;
-        this.moveSpeed = 0.5;
+        this.moveSpeed = 10;
         this.node.active = true
 
     }
@@ -44,19 +45,22 @@ export default class SmallSpirit extends EnemyBase{
             direction.normalize();
             // 计算方向的移动速度
             let velocity = new cc.Vec2();
-            cc.Vec2.multiplyScalar(velocity,direction,this.moveSpeed*dt)
+            // cc.Vec2.multiplyScalar(velocity,direction,this.moveSpeed*dt)
+            velocity.x = direction.x * this.moveSpeed * dt
+            velocity.y = direction.y * this.moveSpeed * dt
             // 增加速度给敌人的位置
-            let newPos = new cc.Vec2();
-            cc.Vec2.add(newPos,enemyPos,velocity)
-            this.node.setPosition(newPos)
-
+            // let newPos = new cc.Vec2();
+            // cc.Vec2.add(newPos,enemyPos,velocity)
+            let rigidBody = this.node.getComponent(cc.RigidBody);
+            rigidBody.linearVelocity = velocity
+            // this.node.setPosition(newPos)
         }
     }
     // 受击
     onHit(damage:number){
         this.health -= damage
         if (this.health <= 0){
-            this.node.emit("die")
+            this.onDie()
         }
     }
 
