@@ -1,4 +1,6 @@
+import BlueBulletControl from "./BlueBulletControl";
 import BulletControl from "./BulletControl";
+import SmallSpirit from "./EnemyScript/SmallSripit";
 import Input, { PlayerDirection } from "./Input";
 import MapBounds from "./MapBounds";
 
@@ -18,11 +20,13 @@ export default class PlayerControl extends cc.Component {
     playerSpell = 0
     playerMaxSpell = 10
     // 人物射击火力
-    playerShotFire = 0
+    playerShotFire = 4
     playerShotFireMax = 4
     // 子弹预制体
     @property(cc.Prefab)
     bulletPrefab:cc.Prefab = null;
+    @property(cc.Prefab)
+    BlueBulletPrefab:cc.Prefab = null;
     // 控制射击间隔
     shootInterval:number  = 0.2;
     // 射击定时器
@@ -35,8 +39,6 @@ export default class PlayerControl extends cc.Component {
     onLoad() {
         // 开启碰撞检测
         cc.director.getPhysicsManager().enabled = true;
-
-        console.log("PlayerControl onLoad"+cc.director.getPhysicsManager().enabled);
     }
     update (dt) {
         // 人物移动
@@ -112,7 +114,7 @@ export default class PlayerControl extends cc.Component {
 
     // 人物死亡
     onDie(){
-
+        // 写游戏结束相关的内容，游戏停止，当前用户的用户名，账号，成绩
     }
     // 人物受到攻击
     onHit(damage:number):void{
@@ -121,11 +123,37 @@ export default class PlayerControl extends cc.Component {
             this.onDie();
         }
     }
-    // 人物吃道具
-    onEatItem(other){
-
+    // 人物设置血量
+    setHp(hp:number){
+        this.playerHp = hp;
+        if(this.playerHp > this.playerMaxHp){
+            this.playerHp = this.playerMaxHp;
+        }
+        if(this.playerHp <= 0){
+            this.onDie();
+        }
+        
     }
-    // 
+    // 人物设置技能使用次数
+    setSpell(spell:number){
+        this.playerSpell = spell;
+        if(this.playerSpell > this.playerMaxSpell){
+            this.playerSpell = this.playerMaxSpell;
+        }
+        if(this.playerSpell <= 0){
+            this.playerSpell=0;
+        }
+    }
+    // 设置人物射击火力
+    setFire(fire:number){
+        this.playerShotFire = fire;
+        if(this.playerShotFire > this.playerShotFireMax){
+            this.playerShotFire = this.playerShotFireMax;
+        }
+        if(this.playerShotFire <= 0){
+            this.playerShotFire=0;
+        }
+    }
     // 人物半径
     getPlayerRadius(){
         return  this.node.width / 2;
@@ -151,15 +179,26 @@ export default class PlayerControl extends cc.Component {
                 // 获得子弹预设体
                 let bulletNode = cc.instantiate(this.bulletPrefab);
                 // 计算子弹射击方向
-                let pos:cc.Vec2 = this.compteShotDirection();
-                // 设置创建子弹的父容器
-                bulletNode.parent = this.node.parent;
+                let direction:cc.Vec2 = this.compteShotDirection();
                 // 根据玩家的方向调整子弹的方向
-                bulletNode.angle = -cc.misc.radiansToDegrees(pos.signAngle(cc.v2(1,0)))
-                //
-                bulletNode.position = cc.v3(this.node.x+20*pos.x,this.node.y+20*pos.y,this.node.z);
-                bulletNode.getComponent(BulletControl).speed = 100
-                bulletNode.getComponent(BulletControl).direction = pos
+                let position = cc.v2(this.node.x+20*direction.x,this.node.y+20*direction.y);
+                bulletNode.getComponent(BulletControl).init(this.node.parent,position,direction);
+
+                // 子弹生成算法
+                if(this.playerShotFire>0){
+                    const angelList = [Math.PI/4,3*Math.PI/4,-Math.PI/4,-3*Math.PI/4]
+                    for(let i =0;i<this.playerShotFire;i++){
+                        let angle = angelList[i]
+                        let direction_1 = direction.rotate(angle);
+                        // 获得子弹预设体
+                        let blueBulletNode = cc.instantiate(this.BlueBulletPrefab);
+                        // 根据玩家的方向调整子弹的方向
+                        let position = cc.v2(this.node.x+20*direction_1.x,this.node.y+20*direction_1.y);
+                        blueBulletNode.getComponent(BlueBulletControl).init(this.node.parent,position,direction_1,this.node.parent.parent.children[1].children);
+
+                    }
+                }
+
                 this.shootTimer = 0;
             }
         }
@@ -172,18 +211,16 @@ export default class PlayerControl extends cc.Component {
         // },0.5)
     }
 
-    onDestroy () {
-    }
-
-
     // 开始碰撞
     onBeginContact(contact, self, other) {
-
+        if(other.node.name == "SmallSpirit"){
+            this.setHp(this.playerHp-other.node.getComponent(SmallSpirit).damage);
+        }
     }
-
-
     // 碰撞结束
     onEndContact(contact, self, other) {
+    }
+    onDestroy () {
     }
 
 

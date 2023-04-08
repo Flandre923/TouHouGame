@@ -29,6 +29,8 @@ export default class SmallSpirit extends EnemyBase{
         //
         this.health = 10;
         this.moveSpeed = 10;
+        this.damage = 1;
+        this.score = 10;
         this.node.active = true
 
     }

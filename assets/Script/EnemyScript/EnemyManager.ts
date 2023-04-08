@@ -30,6 +30,8 @@ export default class EnemyManager extends cc.Component {
     distance=300
     // 敌人池
     enemyPool:cc.NodePool = new cc.NodePool;
+    // 当前的分数
+    score:number = 0;
     onLoad () {
         this.currentNumberOfMonster = this.getMaxMonstersPerWave(this.currentWave);
     }
@@ -62,7 +64,7 @@ export default class EnemyManager extends cc.Component {
 
     // 判断当前场景中的怪物是否已经全部死亡了
     checkWaveClear(){
-        if(this.currentNumberOfMonster == 0 && this.currentLivEenemyNumber == 0){
+        if(this.currentNumberOfMonster <= 0 && this.currentLivEenemyNumber <= 0){
             return true
         }
         return false
@@ -115,6 +117,7 @@ export default class EnemyManager extends cc.Component {
         this.node.addChild(enemy);
         enemy.getComponent(SmallSpirit).currentDown = ()=>{
             this.currentLivEenemyNumber --;
+            this.score+=enemy.getComponent(SmallSpirit).score;
         };
         enemy.getComponent(SmallSpirit).init(this.player, this.enemyPool);
     }
@@ -133,4 +136,6 @@ export default class EnemyManager extends cc.Component {
         }
         return position
     }
+
+    
 }

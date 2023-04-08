@@ -10,7 +10,7 @@ export default class BulletControl extends cc.Component {
     public direction: cc.Vec2 = cc.Vec2.ZERO;
 
     @property(cc.Float)
-    public speed: number = 500.0;
+    public speed: number = 100.0;
     // 子弹伤害
     @property(cc.Integer)
     public damage: number = 2;
@@ -23,6 +23,14 @@ export default class BulletControl extends cc.Component {
     }
     update(dt) {
         this.bulletMove(dt)
+    }
+
+    init(parent:cc.Node,position:cc.Vec2,direction:cc.Vec2){
+        this.node.parent = parent;
+        this.node.setPosition(position);
+        this.direction = direction;
+        this.speed = 100;
+        this.node.angle =-cc.misc.radiansToDegrees(direction.signAngle(cc.v2(1,0)));
     }
 
     bulletMove(dt){
