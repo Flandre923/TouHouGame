@@ -61,14 +61,15 @@ export default class SmallSpirit extends EnemyBase{
     // 受击
     onHit(damage:number){
         this.health -= damage
-        if (this.health <= 0){
+        if (this.health <= 0 && this.isAlive == true){
             this.onDie()
         }
     }
 
     onDie(){
         // 死亡动画加到这里
-        this.enemyPool.put(this.node)
+        //this.enemyPool.put(this.node)
+        this.node.destroy()
         this.currentDown()
     }
 

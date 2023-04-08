@@ -186,15 +186,15 @@ export default class PlayerControl extends cc.Component {
 
                 // 子弹生成算法
                 if(this.playerShotFire>0){
-                    const angelList = [Math.PI/4,3*Math.PI/4,-Math.PI/4,-3*Math.PI/4]
+                    const offset = [cc.v2(20,0),cc.v2(-20,0),cc.v2(0,20),cc.v2(0,-20)]
                     for(let i =0;i<this.playerShotFire;i++){
-                        let angle = angelList[i]
-                        let direction_1 = direction.rotate(angle);
                         // 获得子弹预设体
                         let blueBulletNode = cc.instantiate(this.BlueBulletPrefab);
+                        blueBulletNode.parent = this.node.parent
+                        blueBulletNode.setPosition(cc.v2(this.node.x+offset[i].x,this.node.y+offset[i].y))
                         // 根据玩家的方向调整子弹的方向
-                        let position = cc.v2(this.node.x+20*direction_1.x,this.node.y+20*direction_1.y);
-                        blueBulletNode.getComponent(BlueBulletControl).init(this.node.parent,position,direction_1,this.node.parent.parent.children[1].children);
+                        let blueControl = blueBulletNode.getComponent(BlueBulletControl)
+                        blueControl.target =this.getNearestEnemy(this.node.parent.parent.children[1].children.slice(1))
 
                     }
                 }
@@ -209,6 +209,25 @@ export default class PlayerControl extends cc.Component {
         //     bullet.x = this.node.x
         //     bullet.y = this.node.y + 60;
         // },0.5)
+    }
+
+    // 找到距离玩家最近的敌人
+    getNearestEnemy(es:Array<cc.Node>){
+        let minDistance = Infinity;
+        let nearestEnemy = null;
+
+        for (let i = 0; i < es.length; i++) {
+            const enemy:cc.Node = es[i];
+            const distance:number = Math.sqrt(
+            Math.pow(enemy.x - this.node.x, 2) + Math.pow(enemy.y - this.node.y, 2)
+            );
+            if (distance < minDistance) {
+                minDistance = distance;
+                nearestEnemy = enemy;
+            }
+        }
+
+        return nearestEnemy;
     }
 
     // 开始碰撞

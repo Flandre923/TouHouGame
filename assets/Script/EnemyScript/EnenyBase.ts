@@ -15,6 +15,8 @@ export default class EnemyBase extends cc.Component {
     player:cc.Node;
     // 本怪物击杀后加分
     score:number;
+    // 是否死亡
+    isAlive:boolean = true
     // 对象池
     enemyPool:cc.NodePool
     // 死亡函数

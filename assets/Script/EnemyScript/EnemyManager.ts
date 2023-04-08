@@ -105,11 +105,12 @@ export default class EnemyManager extends cc.Component {
     //根据生成怪物的数量去每隔一段时间生成一只怪物，同时数量减一，所有数量为零停止
     generateMonster(){
         let enemy: cc.Node = null;
-        if (this.enemyPool.size() > 0) {
-            enemy = this.enemyPool.get();
-        } else {
-            enemy = cc.instantiate(this.smallSripit);
-        }
+        // if (this.enemyPool.size() > 0) {
+        //     enemy = this.enemyPool.get();
+        // } else {
+        //     enemy = cc.instantiate(this.smallSripit);
+        // }
+        enemy = cc.instantiate(this.smallSripit);
         let {position, direction} = this.generateEnemyPositionAndDirection(this.player,this.distance);
         enemy.setPosition(position);
         // 给敌人设置方向

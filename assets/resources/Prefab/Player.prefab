@@ -81,8 +81,8 @@
     "_skewX": 0,
     "_skewY": 0,
     "_is3DNode": false,
-    "_groupIndex": 0,
-    "groupIndex": 0,
+    "_groupIndex": 1,
+    "groupIndex": 1,
     "_id": ""
   },
   {
@@ -128,6 +128,9 @@
     "speed": 64,
     "bulletPrefab": {
       "__uuid__": "f08e544f-0172-400e-b8e9-b6e5cc7b0b76"
+    },
+    "BlueBulletPrefab": {
+      "__uuid__": "acc68daf-d476-431a-807e-4c6807899139"
     },
     "_id": ""
   },
