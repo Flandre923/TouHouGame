@@ -15,12 +15,9 @@ export default class DropItemMap{
         })
         return prefab;
     }
-    @property(cc.Prefab)
-    gold:cc.Prefab
 
     dropItemMap = {}
     ItemPrefabMap = {}
-
 
     private constructor(){
         this.dropItemMap = {

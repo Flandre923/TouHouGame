@@ -67,7 +67,7 @@ export default class Input{
         // 鼠标抬起事件
         canvas.node.on(cc.Node.EventType.MOUSE_UP, (event:cc.Event.EventMouse)=>{
              // 清除方向向量
-            this.mousePos = null;
+            //this.mousePos = null;
             // 清除标志位
             this.isShoot = 0;
         });
