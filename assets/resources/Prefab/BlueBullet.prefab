@@ -35,7 +35,7 @@
     "_prefab": {
       "__id__": 6
     },
-    "_opacity": 255,
+    "_opacity": 100,
     "_color": {
       "__type__": "cc.Color",
       "r": 255,

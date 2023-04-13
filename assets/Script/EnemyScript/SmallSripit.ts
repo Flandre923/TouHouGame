@@ -1,9 +1,13 @@
+import DropItemManager from "../DropItemScript/DropItemMananger";
 import EnemyBase from "./EnenyBase";
 
 const {ccclass, property} = cc._decorator;
 @ccclass
 export default class SmallSpirit extends EnemyBase{
+    
 
+    @property(cc.Node)
+    dropManager:cc.Node=null;
     currentDown:Function;
     onLoad () {
     }
@@ -16,6 +20,8 @@ export default class SmallSpirit extends EnemyBase{
         // this.node.getComponent(cc.PhysicsBoxCollider).apply(); // 应用物理碰撞盒组件的属性
         // this.node.on("hit", this.onHit, this); // 监听hit事件（你需要自己派发）
         // this.node.on("die", this.onDie, this); // 监听die事件（你需要自己派发）
+
+        this.dropManager = cc.find("Canvas/map/对象层 1/DropManager")
     }
 
     update(dt) {
@@ -71,6 +77,14 @@ export default class SmallSpirit extends EnemyBase{
         //this.enemyPool.put(this.node)
         this.node.destroy()
         this.currentDown()
+        console.log("----die")
+        if(this.dropManager == null){
+            console.log("----dropManager null")
+        }
+        else{
+            this.dropManager.getComponent(DropItemManager).genDropItem(this.node.name,this.node);
+        }
+
     }
 
 }
