@@ -20,7 +20,7 @@ export default class PlayerControl extends cc.Component {
     playerSpell = 0
     playerMaxSpell = 10
     // 人物射击火力
-    playerShotFire = 4
+    playerShotFire = 0
     playerShotFireMax = 4
     // 子弹预制体
     @property(cc.Prefab)
@@ -146,7 +146,7 @@ export default class PlayerControl extends cc.Component {
     }
     // 设置人物射击火力
     setFire(fire:number){
-        this.playerShotFire = fire;
+        this.playerShotFire += fire;
         if(this.playerShotFire > this.playerShotFireMax){
             this.playerShotFire = this.playerShotFireMax;
         }

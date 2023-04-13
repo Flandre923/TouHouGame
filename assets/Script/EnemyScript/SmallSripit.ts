@@ -6,7 +6,6 @@ const {ccclass, property} = cc._decorator;
 export default class SmallSpirit extends EnemyBase{
     
 
-    @property(cc.Node)
     dropManager:cc.Node=null;
     currentDown:Function;
     onLoad () {
@@ -77,7 +76,6 @@ export default class SmallSpirit extends EnemyBase{
         //this.enemyPool.put(this.node)
         this.node.destroy()
         this.currentDown()
-        console.log("----die")
         if(this.dropManager == null){
             console.log("----dropManager null")
         }

@@ -20,7 +20,6 @@ export default class DropItemManager extends cc.Component {
                     let dropItemName = item['item']
                     let dropItem = cc.instantiate(this.dropItemMap.ItemPrefabMap[dropItemName])
                     this.setItem(dropItem,enemy)
-                    console.log("---dropItemnumber")
                 }
             }
         }
