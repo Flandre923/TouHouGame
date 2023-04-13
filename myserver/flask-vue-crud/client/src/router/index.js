@@ -4,6 +4,8 @@ import Ping from '../components/Ping.vue'
 import Login from '../components/Login.vue'
 import Rank from '../components/Rank.vue'
 import Register from '../components/Register.vue'
+import userAdmin from "../components/admin/userAdmin.vue"
+import navBar from "../components/admin/navbarAdmin.vue"
 Vue.use(VueRouter)
 
 const routes = [
@@ -21,6 +23,15 @@ const routes = [
     path: '/register',
     name: 'Register',
     component: Register,
+  },
+  {
+    path: '/admin/user',
+    name: 'userAdmin',
+    component: userAdmin,
+  },{
+    path: '/admin/navbar',
+    name: 'navBar',
+    component: navBar,
   },
   {
     path: '/ping',

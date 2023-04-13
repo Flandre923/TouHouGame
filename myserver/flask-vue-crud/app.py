@@ -85,7 +85,7 @@ def register():
 
     # 在my_user表中插入数据
     user_query = "INSERT INTO my_user (my_name, my_username, my_personal_info) VALUES (%s, %s, %s)"
-    cursor.execute(user_query, (username, name, my_personInfo))
+    cursor.execute(user_query, (name, username, my_personInfo))
     conn.commit()
 
     return jsonify({'success':True,'message': 'Register successful'}), 200
