@@ -42,6 +42,15 @@ export default class Input{
             }else if (event.keyCode == cc.macro.KEY.d){
                 this.horizontal = 1;
                 this.setCurrentDirection(PlayerDirection.Right);
+            }else if(event.keyCode == cc.macro.KEY.escape){
+                cc.director.pause()
+                const pausePanel = cc.find('Canvas/PausePanel');
+                const ScorePanel = cc.find('Canvas/UI/Score/ScoreString');
+                if (pausePanel) {
+                    pausePanel.setPosition(cc.Camera.main.node.getPosition())
+                    pausePanel.getChildByName("GameScoreLabel").getComponent(cc.Label).string = "分数:"+ScorePanel.getComponent(cc.Label).string;
+                    pausePanel.active = true;
+                }
             }
         })
 

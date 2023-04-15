@@ -28,18 +28,6 @@ export default class EnemyBase extends cc.Component {
 
     }
 
-    move(dt){
-
-    }
-    spawn(x:number,y:number){
-        
-    }
-    die(){
-
-    }
-    shoot(){
-
-    }
 
     // update (dt) {}
 }

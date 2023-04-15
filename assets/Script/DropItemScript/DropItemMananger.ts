@@ -1,4 +1,5 @@
 import DropItemMap from "./DropoItemMap";
+import PPointScript from "./PPointScript";
 
 const {ccclass, property} = cc._decorator;
 

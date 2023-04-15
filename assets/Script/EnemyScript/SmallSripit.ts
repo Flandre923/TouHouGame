@@ -41,7 +41,6 @@ export default class SmallSpirit extends EnemyBase{
     }
     // 怪向人物移动
     move(dt){
-        super.move(dt)
         if(this.player && this.node.active){
             let playerPos = this.player.getPosition();
             let enemyPos = this.node.getPosition();
