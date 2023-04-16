@@ -33,7 +33,8 @@ export default class SmallJadeScript extends cc.Component {
     };
 
     getRadius():number{
-        return this.node.width/2;
+        // return this.node.width/2;
+        return 0;
     }
 
     // onLoad () {}
@@ -44,7 +45,9 @@ export default class SmallJadeScript extends cc.Component {
 
     update (dt) {
         // 弹幕移动
-        this.move(dt);
+        if(this.move){
+            this.move(dt);
+        }
         // 判断是否出街
         this.outOfBounds();
     }

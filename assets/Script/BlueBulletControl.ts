@@ -75,6 +75,9 @@ export default class NewClass extends cc.Component {
         if (other.node.name == "SmallSpirit") {
             // 调用敌人受到伤害的方法
             other.node.getComponent(SmallSpirit).onHit(this.damage);
+        }
+
+        if(other.node.name != "Player"){
             this.node.destroy();
         }
     }
