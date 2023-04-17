@@ -1,4 +1,5 @@
 import MapBounds from "../../MapBounds";
+import PlayerControl from "../../PlayerControl";
 
 const {ccclass, property} = cc._decorator;
 
@@ -51,6 +52,17 @@ export default class SmallJadeScript extends cc.Component {
         // 判断是否出街
         this.outOfBounds();
     }
+
+    // 开始碰撞
+    onBeginContact(contact, selfCollider, otherCollider){
+        // 如果是玩家那么玩家掉血
+        if(otherCollider.node.name == "Player"){
+            otherCollider.node.getComponent(PlayerControl).onHit(this.damage);
+            this.node.destroy();
+            return;
+        }
+    }
+        
 
 
 }

@@ -84,12 +84,12 @@ export default class PlayerManager extends cc.Component {
     }
     // 显示波次
     showWave(){
-        this.waveEnemyNode.getComponent(cc.Label).string = "当前的波次："+this.enemyManagerNode.getComponent(EnemyManager).currentWave
+        this.waveEnemyNode.getComponent(cc.Label).string = "当前的波次："+this.enemyManagerNode.getComponent(EnemyManager).currentIndex
     }
     // 显示剩余人数
     showWavePeople(){
-        let number = this.enemyManagerNode.getComponent(EnemyManager).currentLivEenemyNumber
-        this.surplusEnemyNode.getComponent(cc.Label).string = "当前波次的是否剩余敌人是：" + (number>0 ? "是" : "否");
-        // this.surplusEnemyNode.getComponent(cc.Label).string = "当前波次的是否剩余敌人是：" + number;
+        let number = this.enemyManagerNode.getComponent(EnemyManager).showEnemyNumber
+        // this.surplusEnemyNode.getComponent(cc.Label).string = "当前波次的是否剩余敌人是：" + (number>0 ? "是" : "否");
+        this.surplusEnemyNode.getComponent(cc.Label).string = "当前波次的是否剩余敌人是：" + number;
     }
 }

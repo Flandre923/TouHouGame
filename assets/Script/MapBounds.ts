@@ -24,6 +24,12 @@ export default class MapBounds  {
     }
     //计算地图边界
     getBounds(playerRadius:number){
+        if(this.mapNode == null){
+            return;
+        }
+        //获宗地图大小，减去玩家半径，再减去地图跟随半径，以促进玩家地图跟随，不要超函数范囶
+        //地图大小减去玩家半径，再减去地图跟随半径，以促进玩家地图跟随，不要超函数范囶
+        //地图大小减去玩家半径，再减去地图跟随半径，以促进玩家地图跟随，不要超函数范囶
         let mapSize = this.mapNode.getContentSize();
         mapSize = cc.size(mapSize.width - playerRadius * 2, mapSize.height - playerRadius * 2);
         const leftBoundary = this.mapNode.x - mapSize.width / 2 + playerRadius;

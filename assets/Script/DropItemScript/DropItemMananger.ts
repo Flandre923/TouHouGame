@@ -14,7 +14,7 @@ export default class DropItemManager extends cc.Component {
             let weight  = item.weight/100
             let min_number = item.min_number
             let max_number = item.max_number
-            let number = Math.floor(Math.random() * (max_number - min_number + 2));
+            let number = Math.floor(Math.random() * (max_number - min_number +1) + min_number);
             // 如果生成概率落在为了weight的百分比中
             if(Math.random()<=weight){
                 for(let i =0;i<number;i++){

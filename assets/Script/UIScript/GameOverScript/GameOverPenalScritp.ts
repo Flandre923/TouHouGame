@@ -29,6 +29,14 @@ export default class GameOverPenalScript extends cc.Component {
     }
 
     onEndButtonClick() {
+        //
+        const enemyBulletManager = cc.find('Canvas/map/对象层 1/EnemyBulletManager');
+        if (enemyBulletManager) {
+            enemyBulletManager.children.forEach(child => {
+                child.removeFromParent();
+                child.destroy();
+            });
+        }
         // 退出游戏并返回到主菜单
         cc.director.loadScene('MainMenuScene');
         // 是否是人物死亡，若是不存档，否则就存档 上传分数

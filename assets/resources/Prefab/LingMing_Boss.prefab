@@ -13,7 +13,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "Medium_Jade",
+    "_name": "LingMing_Boss",
     "_objFlags": 0,
     "_parent": null,
     "_children": [],
@@ -45,8 +45,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 47,
-      "height": 45
+      "width": 252,
+      "height": 375
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -57,15 +57,15 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        -66.771,
-        20.934,
+        -28.24,
+        7.315,
         0,
         0,
         0,
         0,
         1,
-        0.3,
-        0.3,
+        0.1,
+        0.1,
         0.1
       ]
     },
@@ -78,8 +78,8 @@
     "_skewX": 0,
     "_skewY": 0,
     "_is3DNode": false,
-    "_groupIndex": 3,
-    "groupIndex": 3,
+    "_groupIndex": 1,
+    "groupIndex": 1,
     "_id": ""
   },
   {
@@ -98,7 +98,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "4d009a73-6811-44d4-9002-468b6c1aa483"
+      "__uuid__": "e54cb664-4c0e-49c7-82de-b8a473e987ce"
     },
     "_type": 0,
     "_sizeMode": 1,
@@ -115,16 +115,6 @@
     "_id": ""
   },
   {
-    "__type__": "07d17wh02ZJoYKAhPAOa7lW",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 1
-    },
-    "_enabled": true,
-    "_id": ""
-  },
-  {
     "__type__": "cc.RigidBody",
     "_name": "",
     "_objFlags": 0,
@@ -132,7 +122,7 @@
       "__id__": 1
     },
     "_enabled": true,
-    "_type": 1,
+    "_type": 2,
     "_allowSleep": true,
     "_gravityScale": 0,
     "_linearDamping": 0,
@@ -143,14 +133,14 @@
       "y": 0
     },
     "_angularVelocity": 0,
-    "_fixedRotation": false,
+    "_fixedRotation": true,
     "enabledContactListener": true,
     "bullet": false,
     "awakeOnLoad": true,
     "_id": ""
   },
   {
-    "__type__": "cc.PhysicsCircleCollider",
+    "__type__": "cc.PhysicsBoxCollider",
     "_name": "",
     "_objFlags": 0,
     "node": {
@@ -168,7 +158,21 @@
       "x": 0,
       "y": 0
     },
-    "_radius": 18.399999999999984,
+    "_size": {
+      "__type__": "cc.Size",
+      "width": 180,
+      "height": 350
+    },
+    "_id": ""
+  },
+  {
+    "__type__": "81fafp2H2hOMpb2EwDD0U/V",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 1
+    },
+    "_enabled": true,
     "_id": ""
   },
   {

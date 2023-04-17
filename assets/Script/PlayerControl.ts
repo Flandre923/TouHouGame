@@ -33,6 +33,10 @@ export default class PlayerControl extends cc.Component {
     shootTimer:number = 0;
     // 射击方向
     shootDirection:cc.Vec2;
+    // 受击无敌
+    isInvincible:Boolean=false;
+    // 受击无敌时间
+    invincible_timer:number=0;
 
     start () {
     }
@@ -51,8 +55,11 @@ export default class PlayerControl extends cc.Component {
         this.setCreamPos()
         // 人物动画播放
         this.playAnime(dt)
-
+        // 人物受击无敌
+        this.invincible(dt)
     }
+
+    
     // 设置摄像机跟随任务
     setCreamPos(){
         cc.Camera.main.node.x = this.node.x;
@@ -112,12 +119,26 @@ export default class PlayerControl extends cc.Component {
         this.node.y += this.speed * dt * Input.Instance.vertical
     }
 
+    // 人物受击无敌
+    invincible(dt){
+        if (this.isInvincible) {
+            this.invincible_timer -= dt; // 减少计时器的剩余时间
+            if (this.invincible_timer <= 0.0) {
+              this.isInvincible = false; // 如果计时器的剩余时间小于等于0，则将玩家的无敌状态设置为假
+            }
+        }
+    }
     // 人物死亡
     onDie(){
         // 写游戏结束相关的内容，游戏停止，当前用户的用户名，账号，成绩
     }
     // 人物受到攻击
     onHit(damage:number):void{
+        if (this.isInvincible) {
+            return; // 如果玩家已经处于无敌状态，则不执行任何操作
+          }
+        this.isInvincible = true; // 设置玩家的无敌状态为真
+        this.invincible_timer = 2.0; // 启动计时器，设置剩余时间为5秒
         this.playerHp -= damage;
         if(this.playerHp <= 0){
             this.onDie();
@@ -221,7 +242,7 @@ export default class PlayerControl extends cc.Component {
             const distance:number = Math.sqrt(
             Math.pow(enemy.x - this.node.x, 2) + Math.pow(enemy.y - this.node.y, 2)
             );
-            if (distance < minDistance) {
+            if (distance < minDistance && enemy.active == true) {
                 minDistance = distance;
                 nearestEnemy = enemy;
             }

@@ -9,7 +9,7 @@ export class AbSpellCard{
     private _name: string; // 符卡名称
     private _duration: number; // 持续时间
     private _bulletNumbers:Array<cc.Prefab>; // 使用弹幕预制体数组
-    private _bulletCallback: () => void; // 发射弹幕的回调函数
+    private _bulletCallback: (dt) => void; // 发射弹幕的回调函数
 
     constructor(name:string,duration:number,bulletNumbers:Array<cc.Prefab>){
         this._name = name;
@@ -17,12 +17,12 @@ export class AbSpellCard{
         this._bulletNumbers = bulletNumbers;
     }
 
-    set bulletCallback(bulletCallback:()=>void){
+    set bulletCallback(bulletCallback:(dt)=>void){
         this._bulletCallback = bulletCallback;
     }
 
-    runBulletCallBack(){
-        this._bulletCallback();
+    runBulletCallBack(dt){
+        this._bulletCallback(dt);
     }
 
     get bulletNumbers():Array<cc.Prefab>{

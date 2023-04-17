@@ -9,5 +9,9 @@ export default class BulletPrefab extends cc.Component {
     mediumJadePrefab: cc.Prefab;
     @property(cc.Prefab)
     smallJadePrefab: cc.Prefab;
+    @property(cc.Prefab)
+    riceBulletPrefab:cc.Prefab;
+    @property(cc.Prefab)
+    arrowBulletPrefab:cc.Prefab;
 
 }

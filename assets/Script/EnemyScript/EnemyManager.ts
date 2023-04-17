@@ -1,4 +1,5 @@
 import MapBounds from "../MapBounds";
+import LingMengBoss from "./LingMengBoss";
 import SmallSpirit from "./SmallSripit";
 
 const {ccclass, property} = cc._decorator;
@@ -8,83 +9,100 @@ export default class EnemyManager extends cc.Component {
     // 生成对象的预制体
     @property(cc.Prefab)
     smallSripit:cc.Prefab;
+    // 生成boss预制体
+    @property({type:[cc.Prefab]})
+    bossPrefab:cc.Prefab[] = [];
+    @property({type:[cc.Node]})
+    uiNodes:cc.Node[]=[];
     // 玩家
     @property(cc.Node)
     player:cc.Node = null;
+    // 弹幕预制体管理节点
+    @property(cc.Node)
+    bulletManager:cc.Node = null;   
+
+    // 当前boss索引
+    private currentBossIndex = 0;
 
     // 每波生成怪物函数的参数
-    L =100
-    x0 = 8
-    k = 0.3
-    // 生成怪物的一个下限
-    monsterNumberFloor = 10;
-    // 生成boss的间隔波数
-    bossWaveNumber = 10;
-    //当前的第几波
-    currentWave = 1;
-    // 当前生成了多少只怪物
-    currentNumberOfMonster = 0;
-    // 当前场上还有多少只存活的敌人。
-    currentLivEenemyNumber = 0;
-    // 参数怪物的距离玩家多远
-    distance=300
+    private readonly L = 100;
+    private readonly x0 = 8;
+    private readonly k = 0.3;
+
+    // 怪物生成下限 ， boss生成波次 ， 玩家距离
+    private readonly monsterNumberFloor = 10;
+    private readonly distance = 300;
+    
+    public score = 0; // 分数 
+
+    //
+    private enemyCount: number[];   //每个索引对应的敌人数量
+    public currentIndex: number = 0;  //当前索引
+
+    private timeInterval: number = 1; //生成敌人的时间间隔，单位为秒
+    private timeSinceLastEnemy: number = 0; //距离上一个敌人生成已经过去的时间
+    public showEnemyNumber:number;
     // 敌人池
     enemyPool:cc.NodePool = new cc.NodePool;
-    // 当前的分数
-    score:number = 0;
     onLoad () {
-        this.currentNumberOfMonster = this.getMaxMonstersPerWave(this.currentWave);
     }
 
     start () {
-        // 循环10次
-        // this.generateMonster(this.player,this.smallSripit,this.enemyPool)
-
-        this.schedule(()=>{
-            if (this.currentNumberOfMonster > 0){
-                this.generateMonster();
-                this.currentNumberOfMonster --;
-                this.currentLivEenemyNumber ++;
-            } else {
-                if(this.checkWaveClear()){
-                    if(this.currentWave % this.bossWaveNumber == 0){
-                        this.generateBoss();
-                        this.currentLivEenemyNumber++;
-                    }else{
-                        this.currentWave ++;
-                        this.currentNumberOfMonster = this.getMaxMonstersPerWave(this.currentWave);
-                    }
-                }
+        this.enemyCount= Array.from({ length: 50 }, () => Math.floor(Math.random() * 5) + 1);
+        for(let i =0;i<this.enemyCount.length;i++){
+            this.enemyCount[i] = this.getMaxMonstersPerWave(i);
+            if(i%3==0){
+                this.enemyCount[i] = 1;
             }
-        },1)
+        }
+        this.showEnemyNumber = this.enemyCount[0];
     }
 
     update (dt) {
+        //每隔一段时间就生成一只怪
+        this.timeSinceLastEnemy += dt;
+        if (this.timeSinceLastEnemy >= this.timeInterval) { //到达生成敌人的时间间隔
+            const remainingEnemies = this.enemyCount[this.currentIndex];
+            if (this.enemyCount[this.currentIndex] > 0) { //当前索引下还有剩余的敌人
+                if(this.currentIndex % 3 === 0 && this.currentIndex!==0){
+                    this.generateBoss();
+                }else{
+                    this.generateMonster();
+                }
+                this.enemyCount[this.currentIndex]--;
+            } else if (this.noMoreEnemiesOnField()) { //当前索引下所有敌人已经生成完毕且场上没有其他敌人了
+                this.currentIndex++;
+                this.showEnemyNumber = this.enemyCount[this.currentIndex];
+            }
+            this.timeSinceLastEnemy = 0; //重置计时器
+        }
     }
 
     // 判断当前场景中的怪物是否已经全部死亡了
-    checkWaveClear(){
-        if(this.currentNumberOfMonster <= 0 && this.currentLivEenemyNumber <= 0){
-            return true
-        }
-        return false
+    noMoreEnemiesOnField(){
+        const activeEnemies = this.node.children.filter(child => child.active); //过滤出所有活跃的敌人
+        return activeEnemies.length === 0; //如果没有活跃敌人，则表示场上没有其他敌人了
     }
 
     // 生成boss
     generateBoss(){
-        
+        let enemy = cc.instantiate(this.bossPrefab[this.currentBossIndex]);
+        enemy.setPosition(this.node.position);
+        // 给敌人设置方向
+        this.node.addChild(enemy);
+        const bossComponent = enemy.getComponent(LingMengBoss);
+        bossComponent.currentDown =  ()=>{
+            this.showEnemyNumber --;
+            this.score+=enemy.getComponent(LingMengBoss).score;
+        };
     }
 
 
     // 每波的怪物最大的数量
     getMaxMonstersPerWave(x:number){
         // 有一个问题是精英怪的生成 希望和当前生成怪的数目和一个概率挂钩
-        let monsterNumber = Math.floor(this.L / (1+Math.exp(-this.k*(x-this.x0))))
-        if(this.monsterNumberFloor<10){
-            return 10
-        }else{
-            return monsterNumber
-        }
+        const monsterNumber = Math.floor(this.L / (1 + Math.exp(-this.k * (x - this.x0))));
+        return Math.max(this.monsterNumberFloor, monsterNumber);
     }
 
     // 根据玩家的位置获得敌人的位置和方向
@@ -104,20 +122,14 @@ export default class EnemyManager extends cc.Component {
 
     //根据生成怪物的数量去每隔一段时间生成一只怪物，同时数量减一，所有数量为零停止
     generateMonster(){
-        let enemy: cc.Node = null;
-        // if (this.enemyPool.size() > 0) {
-        //     enemy = this.enemyPool.get();
-        // } else {
-        //     enemy = cc.instantiate(this.smallSripit);
-        // }
-        enemy = cc.instantiate(this.smallSripit);
+        let enemy = cc.instantiate(this.smallSripit);
         let {position, direction} = this.generateEnemyPositionAndDirection(this.player,this.distance);
         enemy.setPosition(position);
         // 给敌人设置方向
         enemy.angle = -cc.misc.radiansToDegrees(Math.atan2(direction.y, direction.x));
         this.node.addChild(enemy);
         enemy.getComponent(SmallSpirit).currentDown = ()=>{
-            this.currentLivEenemyNumber --;
+            this.showEnemyNumber --;
             this.score+=enemy.getComponent(SmallSpirit).score;
         };
         enemy.getComponent(SmallSpirit).init(this.player, this.enemyPool);

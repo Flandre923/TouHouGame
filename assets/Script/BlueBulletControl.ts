@@ -1,3 +1,4 @@
+import LingMengBoss from "./EnemyScript/LingMengBoss";
 import SmallSpirit from "./EnemyScript/SmallSripit";
 import Input from "./Input";
 import MapBounds from "./MapBounds";
@@ -5,7 +6,7 @@ import MapBounds from "./MapBounds";
 const { ccclass, property } = cc._decorator;
 
 @ccclass
-export default class NewClass extends cc.Component {
+export default class BlueBulletControl extends cc.Component {
     //子弹速度
     @property(cc.Float)
     public speed: number = 100;
@@ -75,6 +76,8 @@ export default class NewClass extends cc.Component {
         if (other.node.name == "SmallSpirit") {
             // 调用敌人受到伤害的方法
             other.node.getComponent(SmallSpirit).onHit(this.damage);
+        }else if(other.node.name == "LingMing_Boss"){
+            other.node.getComponent(LingMengBoss).onHit(this.damage);
         }
 
         if(other.node.name != "Player"){

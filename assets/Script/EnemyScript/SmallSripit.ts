@@ -33,7 +33,7 @@ export default class SmallSpirit extends EnemyBase{
         this.enemyPool = enemyPool;
         //
         this.health = 10;
-        this.moveSpeed = 10;
+        this.moveSpeed = 70;
         this.damage = 1;
         this.score = 10;
         this.node.active = true
@@ -48,18 +48,18 @@ export default class SmallSpirit extends EnemyBase{
             // 计算敌人和玩家的方向
             cc.Vec2.subtract(direction,playerPos,enemyPos);
             //  归一化
-            direction.normalize();
+            direction.normalizeSelf();
             // 计算方向的移动速度
             let velocity = new cc.Vec2();
             // cc.Vec2.multiplyScalar(velocity,direction,this.moveSpeed*dt)
             velocity.x = direction.x * this.moveSpeed * dt
             velocity.y = direction.y * this.moveSpeed * dt
             // 增加速度给敌人的位置
-            // let newPos = new cc.Vec2();
-            // cc.Vec2.add(newPos,enemyPos,velocity)
-            let rigidBody = this.node.getComponent(cc.RigidBody);
-            rigidBody.linearVelocity = velocity
-            // this.node.setPosition(newPos)
+            let newPos = new cc.Vec2();
+            cc.Vec2.add(newPos,enemyPos,velocity)
+            // let rigidBody = this.node.getComponent(cc.RigidBody);
+            // rigidBody.linearVelocity = velocity
+            this.node.setPosition(newPos)
         }
     }
     // 受击
@@ -73,6 +73,7 @@ export default class SmallSpirit extends EnemyBase{
     onDie(){
         // 死亡动画加到这里
         //this.enemyPool.put(this.node)
+        this.isAlive = false;
         this.node.destroy()
         this.currentDown()
         if(this.dropManager == null){
