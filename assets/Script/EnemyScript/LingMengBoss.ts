@@ -144,7 +144,7 @@ export default class LingMengBoss extends cc.Component {
             if(dt % 4 == 0){
                 // let i = dt / 20;
                 let i=0;
-                for(i=angle;i<2*Math.PI + angle;i+=2*Math.PI/7){
+                for(i=angle;i<2*Math.PI + angle;i+=2*Math.PI/5){
                         const bulletNode = cc.instantiate(arrowBulletPrefab); // 创建箭头
                         bulletNode.setPosition(this.node.getPosition()); // 计算弹幕位置
                         bulletNode.parent = this.node.parent.parent.getChildByName("EnemyBulletManager");
@@ -154,7 +154,7 @@ export default class LingMengBoss extends cc.Component {
                         bulletComponent.speed = 100;
                     if(Math.abs(i-angle)<0.1){
                     }else{
-                        bulletNode.color = cc.Color.BLUE
+                        bulletNode.color = cc.Color.CYAN
                     }
                     bulletComponent.direction = cc.v2(
                         0.5 * Math.sin(i),
@@ -206,11 +206,7 @@ export default class LingMengBoss extends cc.Component {
         // 清除弹幕定时器
         // clearInterval(this._bulletTimerId);
         // 销毁当前生成的所有弹幕节点
-        for (const bulletNode of this._bulletNodes) {
-            if (bulletNode != null) {
-                bulletNode.destroy();
-            }
-        }
+        this.deleteGenBullet()
         this.currentDown();
         this.node.destroy();
         const healthBarForeground = this.node.parent.getComponent(EnemyManager).uiNodes[0].active = false;
@@ -244,9 +240,7 @@ export default class LingMengBoss extends cc.Component {
                 this.updateHealthBar();
                 // 将弹幕回调函数设为空
                 this._spellCards[this._spellCardIndex - 1].bulletCallback = null;
-                for (const bulletNode of this._bulletNodes) {
-                    bulletNode.destroy();
-                }
+                this.deleteGenBullet()
             }
         }
         if (this._spellCardIndex == -1) {
@@ -259,6 +253,13 @@ export default class LingMengBoss extends cc.Component {
         const healthPercentage = this._hp / this._maxHp;
         healthBarForeground.parent.active = true;
         healthBarForeground.width = 500 * healthPercentage;
+    }
+
+    deleteGenBullet(){
+        const bullets = this.node.parent.parent.getChildByName("EnemyBulletManager").children;
+        for (let bullet of bullets) {
+            bullet.destroy();
+        }
     }
 
     public get score() {

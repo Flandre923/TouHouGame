@@ -7,16 +7,28 @@
             <h4 class="card-title text-center">用户登录</h4>
             <form @submit.prevent="login">
               <b-form-group label="用户名" label-for="username-input">
-                <b-form-input id="username-input" type="email" v-model="username" required></b-form-input>
+                <b-form-input
+                  id="username-input"
+                  type="email"
+                  v-model="username"
+                  required
+                ></b-form-input>
               </b-form-group>
               <b-form-group label="密码" label-for="password-input">
-                <b-form-input id="password-input" type="password" v-model="password" required></b-form-input>
+                <b-form-input
+                  id="password-input"
+                  type="password"
+                  v-model="password"
+                  required
+                ></b-form-input>
               </b-form-group>
               <div class="d-flex justify-content-between">
                 <b-button variant="primary" type="submit">登陆</b-button>
                 <b-button variant="secondary" @click="register">注册</b-button>
               </div>
-              <b-alert variant="danger" v-if='error' class="mt-3" show>{{ error }}</b-alert>
+              <b-alert variant="danger" v-if="error" class="mt-3" show>{{
+                error
+              }}</b-alert>
             </form>
           </div>
         </div>
@@ -46,33 +58,48 @@ export default {
       // 验证密码是否包含大小写和特殊字符
       if (!this.validatePassword(this.password)) {
         this.error = "密码必须包含大小写和特殊字符";
-        alert(this.error)
+        alert(this.error);
         return;
       }
       // 发送请求到后台
       axios
         .post("http://localhost:5000/login", {
           username: this.username,
-          password: this.password
+          password: this.password,
         })
-        .then(res => {
+        .then((res) => {
           // 如果后台返回成功，跳转页面
-          console.log(res)
-
+          console.log(res);
           if (res.data.success) {
             //跳转
-          }else{
-            this.error = res.data.message
+            // console.log(res.data.token);
+            localStorage.setItem("my_token", res.data.token); // 将token存储在本地存储中
+            // console.log(localStorage.getItem("my_token"))
+          } else {
+            this.error = res.data.message;
           }
         })
-        .catch(err => {
+        .catch((err) => {
           // 如果请求出错，提示信息
-          console.log(err)
+          console.log(err);
           this.error = "账号密码错误";
         });
     },
     register() {
       // 注册逻辑
+      axios
+        .get("http://localhost:5000/admin", {
+          headers: {
+            Authorization: `${localStorage.getItem("my_token")}`,
+          },
+        })
+        .then((res) => {
+          // 处理响应
+          console.log(res.data)
+        })
+        .catch((err) => {
+          // 处理错误
+        });
     },
     validateEmail(email) {
       // 验证邮箱地址的正则表达式
@@ -83,8 +110,8 @@ export default {
       // 验证密码是否包含大小写和特殊字符的正则表达式
       const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{6,}$/;
       return regex.test(password);
-    }
-  }
+    },
+  },
 };
 </script>
 
