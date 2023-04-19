@@ -71,10 +71,10 @@ export default {
           // 如果后台返回成功，跳转页面
           console.log(res);
           if (res.data.success) {
-            //跳转
             // console.log(res.data.token);
             localStorage.setItem("my_token", res.data.token); // 将token存储在本地存储中
-            // console.log(localStorage.getItem("my_token"))
+            localStorage.setItem("my_role",res.data.role_id);
+            this.$router.push("/admin/user")
           } else {
             this.error = res.data.message;
           }

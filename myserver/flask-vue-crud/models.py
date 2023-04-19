@@ -18,6 +18,29 @@ class User:
         conn.commit()
         cursor.close()
 
+    
+    def update_role_id(self, new_role_id):
+        conn = mysql.connection
+        cursor = conn.cursor()
+        query = "UPDATE my_account SET my_role_id = %s WHERE my_id = %s"
+        cursor.execute(query, (new_role_id, self.id))
+        conn.commit()
+        cursor.close()
+        self.role_id = new_role_id
+    
+    @staticmethod
+    def get_all():
+        conn = mysql.connection
+        cursor = conn.cursor()
+        query = "SELECT my_id, my_username, my_role_id FROM my_account"
+        cursor.execute(query)
+        results = cursor.fetchall()
+        cursor.close()
+        users = []
+        for result in results:
+            users.append(User(result[0], result[1], None, result[2]))
+        return users
+    
     @staticmethod
     def get_by_username(username):
         conn = mysql.connection
@@ -30,6 +53,15 @@ class User:
             return User(*result)
         else:
             return None
+        
+    @staticmethod
+    def delete_by_id(user_id):
+        conn = mysql.connection
+        cursor = conn.cursor()
+        query = "DELETE FROM my_account WHERE my_id = %s"
+        cursor.execute(query, (user_id,))
+        conn.commit()
+        cursor.close()
 
 
 class UserInfo:
@@ -89,3 +121,46 @@ class RankData:
 
         return users
 
+class Role:
+    def __init__(self, my_id=None, my_role_id=None, my_role_name=None):
+        self.my_id = my_id
+        self.my_role_id = my_role_id
+        self.my_role_name = my_role_name
+
+    def save(self):
+        conn = mysql.connection
+        cursor = conn.cursor()
+        query = "INSERT INTO my_role (my_role_id, my_role_name) VALUES (%s, %s)"
+        cursor.execute(query, (self.my_role_id, self.my_role_name))
+        conn.commit()
+        cursor.close()
+
+    @staticmethod
+    def get_all():
+        conn = mysql.connection
+        cursor = conn.cursor()
+        query = "SELECT * FROM my_role"
+        cursor.execute(query)
+        results = cursor.fetchall()
+        cursor.close()
+        my_table_entries = []
+        for result in results:
+            my_table_entries.append(Role(*result))
+        return my_table_entries
+
+    def update(self):
+        conn = mysql.connection
+        cursor = conn.cursor()
+        query = "UPDATE my_role SET my_role_id = %s, my_role_name = %s WHERE my_id = %s"
+        cursor.execute(query, (self.my_role_id, self.my_role_name, self.my_id))
+        conn.commit()
+        cursor.close()
+    
+    @staticmethod
+    def delete_by_id(my_id):
+        conn = mysql.connection
+        cursor = conn.cursor()
+        query = "DELETE FROM my_role WHERE my_id = %s"
+        cursor.execute(query, (my_id,))
+        conn.commit()
+        cursor.close()

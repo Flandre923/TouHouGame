@@ -6,7 +6,32 @@ from flask import jsonify, request
 
 from app import app
 from config import Config
-from models import User,UserInfo,RankData,mysql
+from models import User,UserInfo,RankData,Role
+
+from functools import wraps
+
+def token_required(role=None):
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            token = request.headers.get('Authorization')
+            # print(token)
+            if not token:
+                return jsonify({'error': 'Token missing'}), 401
+            try:
+                data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
+                if datetime.utcnow() > datetime.fromtimestamp(data['exp']):
+                    return jsonify({'error': 'Token expired'}), 401
+                if role is not None and data['role'] != role:
+                    return jsonify({'error': 'Authorization not enough'}), 401
+                return f(*args, **kwargs)
+            except Exception as e:
+                print(e)
+                return jsonify({'error': 'Invalid token'}), 401
+        return decorated_function
+    return decorator
+
+
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -22,7 +47,7 @@ def login():
                 'role': user.role_id,
                 'exp': datetime.utcnow() + timedelta(days=1)
             }, Config.SECRET_KEY, algorithm='HS256')
-            return jsonify({'success': True, 'message': 'Login successful', 'token': token}), 200
+            return jsonify({'success': True,'role':user.role_id, 'message': 'Login successful', 'token': token}), 200
         else:
             return jsonify({'success': False, 'message': '账号密码错误'}), 401
     else:
@@ -90,28 +115,82 @@ def rank():
 
 # 需要token验证的接口
 @app.route('/admin')
+@token_required(role=2)
 def admin():
-    # 获取请求中的token
-    token = request.headers.get('Authorization')
-    print(token)
-    if not token:
-        return jsonify({'error': 'Token missing'}), 401
-    try:
-        # 解码token
-        data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
-        # 检查token是否过期
-        if datetime.utcnow() > datetime.fromtimestamp(data['exp']):
-            return jsonify({'error': 'Token expired'}), 401
-        # 返回受保护的资源
-        return jsonify({'message': 'Hello, {}! This is an admin page.'.format(data['username'])})
-    except:
-        return jsonify({'error': 'Invalid token'}), 401
+    data = jwt.decode(request.headers.get('Authorization'), app.config['SECRET_KEY'], algorithms=['HS256'])
+    return jsonify({'message': 'Hello, {}! This is an admin page.'.format(data['username'])})
 
-# using the new_cursor() method
-@app.route('/new_cursor')
-def new_cursor():
-    EXAMPLE_SQL = 'select * from test.my_account'
-    cur = mysql.new_cursor(dictionary=True)
-    cur.execute(EXAMPLE_SQL)
-    output = cur.fetchall()
-    return str(output)
+# 需要token验证的接口
+@app.route('/admin/users')
+@token_required(role=2)
+def admin_user():
+    user_list = User.get_all()
+    users_dict = [user.__dict__ for user in user_list]
+    return jsonify(users_dict)
+
+@app.route('/admin/roles',methods=['GET'])
+@token_required(role=2)
+def admin_role():
+    role_list = Role.get_all()
+    role_dict = [role.__dict__ for role in role_list]
+    return jsonify(role_dict)
+
+
+@app.route('/admin/users/update',methods=['POST'])
+@token_required(role=2)
+def admin_user_update():
+    post_data = request.get_json()
+    user_account = post_data.get('user_account')
+    id  = user_account.get('id')
+    username = user_account.get('username')
+    role_id = user_account.get('role_id')
+    user = User.get_by_username(username)
+    if user.role_id == role_id:
+        return jsonify({'message': 'Update successful'})
+    user.update_role_id(role_id)
+    return jsonify({'message': 'Update successful'})
+
+@app.route('/admin/users/delete',methods=['GET'])
+@token_required(role=2)
+def admin_user_delete():
+    user_id = request.args.get('id')
+    print(user_id)
+    User.delete_by_id(user_id)
+    return jsonify({'message': 'Delete successful'})
+
+
+@app.route('/admin/role/delete',methods=['GET'])
+@token_required(role=2)
+def admin_role_delete():
+    user_id = request.args.get('my_id')
+    print(user_id)
+    Role.delete_by_id(user_id)
+    return jsonify({'message': 'Delete successful'})
+
+
+@app.route('/admin/role/update',methods=['POST'])
+@token_required(role=2)
+def admin_role_update():
+    # 根据my_id更新数据
+    post_data = request.get_json()
+    id  = post_data.get('my_id')
+    role_id = post_data.get('my_role_id')
+    role_name = post_data.get('my_role_name')
+    role = Role(id,role_id,role_name)
+    role.update()
+    return jsonify({'message': 'Update successful'})
+
+
+@app.route('/admin/role/add',methods=['POST'])
+@token_required(role=2)
+def admin_role_add():
+    # 添加一个Role
+    post_data = request.get_json()
+    print(post_data)
+    role_id = post_data.get('my_role_id')
+    role_name = post_data.get('my_role_name')
+    role = Role(None,role_id,role_name)
+    role.save()
+    return jsonify({'message': 'Add successful'})
+
+
