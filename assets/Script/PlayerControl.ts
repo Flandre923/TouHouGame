@@ -136,15 +136,24 @@ export default class PlayerControl extends cc.Component {
     onDie(){
         // 写游戏结束相关的内容，游戏停止，当前用户的用户名，账号，成绩
         // 上传分数
-        this.isAlive = false;
-        cc.game.pause();
-        if(cc.sys.localStorage.getItem('my_token')){
-            this.node.parent.parent.getComponent(GameManger).uploadRank(this.node.parent.parent.children[1].getComponent(EnemyManager).score)
+        if (!this.isAlive) {
+            return
         }
-        let panelNode = cc.find("Canvas/PausePanel")
-        panelNode.position = this.node.position
-        panelNode.active = true
-        panelNode.children[2].children[0].active = false
+        this.isAlive = false;
+        let score = this.node.parent.parent.children[1].getComponent(EnemyManager).score
+        if(cc.sys.localStorage.getItem('my_token')){
+            this.node.parent.parent.getComponent(GameManger).uploadRank(score)
+        }
+        let panelNode = null
+        if(panelNode === null){
+            panelNode = cc.find("Canvas/PausePanel")
+            panelNode.position = this.node.position
+            panelNode.active = true
+            panelNode.children[1].getComponent(cc.Label).string = "分数:"+score;
+            panelNode.children[2].children[0].active = false
+        }
+        cc.director.pause();
+        
         // this.node.parent.parent.getComponent(GameManger).gameOver();
     }
     // 人物受到攻击

@@ -31,6 +31,7 @@ export default class NewClass extends cc.Component {
         // 重置游戏状态
         if(cc.director.isPaused()){
             cc.director.resume();
+            cc.game.restart();
         }
 
         cc.director.loadScene('MainScene');
@@ -43,7 +44,7 @@ export default class NewClass extends cc.Component {
     // rank button
     onRankButtonClick(){
         // 打开浏览器的一个网址
-        cc.sys.openURL("http://www.baidu.com")
+        cc.sys.openURL("http://localhost:8080/")
     }
 
     // quitbutton
