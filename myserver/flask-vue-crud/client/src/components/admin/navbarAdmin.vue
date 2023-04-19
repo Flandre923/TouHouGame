@@ -20,9 +20,9 @@
           <li class="nav-item">
             <router-link to="/admin/score" class="nav-link">分数管理</router-link>
           </li>
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             <router-link to="/admin/userInfo" class="nav-link">用户信息管理</router-link>
-          </li>
+          </li> -->
           <li class="nav-item">
             <b-button variant="purple" @click="logout">退出登录</b-button>
           </li>

@@ -56,7 +56,7 @@ export default class LingMengBoss extends cc.Component {
         let bulletPrefabScript = this.node.parent.getComponent(EnemyManager).bulletManager.getComponent(BulletPrefab)
         let playerNode = this.node.parent.getComponent(EnemyManager).player
         let card1 = new AbSpellCard("[想起]户隐山之投", 5, [bulletPrefabScript.bigJadePrefab, bulletPrefabScript.mediumJadePrefab, bulletPrefabScript.smallJadePrefab]);
-        let card2 = new AbSpellCard("[赛符]天上天下之照国", 100, [bulletPrefabScript.riceBulletPrefab,bulletPrefabScript.arrowBulletPrefab]);
+        let card2 = new AbSpellCard("[境界]波与粒的境界", 100, [bulletPrefabScript.riceBulletPrefab,bulletPrefabScript.arrowBulletPrefab]);
         let bulletNumbers = card1.bulletNumbers
         // this._bulletNodes = []; // 清空当前生成的所有弹幕节点
         card1.bulletCallback = (dt) => {
@@ -160,6 +160,9 @@ export default class LingMengBoss extends cc.Component {
                         0.5 * Math.sin(i),
                         0.5 * Math.cos(i)
                     ).normalizeSelf();
+                    // 弹幕方向旋转
+                    let a_angle = bulletComponent.direction.angle(cc.v2(1,0))
+                    bulletComponent.node.angle = -cc.misc.radiansToDegrees(a_angle);
                     // 设置弹幕的 move 方法
                     bulletComponent.move = (dt) => {
                         bulletNode.x += bulletComponent.direction.x * dt * bulletComponent.speed;
@@ -170,7 +173,6 @@ export default class LingMengBoss extends cc.Component {
             }
             angle += w;
             w += 0.0015;
-            
         }
 
         this._spellCards.push(card1);

@@ -1,3 +1,5 @@
+import Util from "../Util/Util";
+
 const { ccclass, property } = cc._decorator;
 // import axios from 'axios'
 @ccclass
@@ -34,7 +36,7 @@ export default class LoginScript extends cc.Component {
         console.log("" + username + ":" + password)
 
         // this.login(username, password);
-        this.login3(username,password);
+        this.login3(username, password);
     }
 
     showErrorMessage(msg: string) {
@@ -43,7 +45,7 @@ export default class LoginScript extends cc.Component {
         labelNode.active = true;
     }
 
-    login(username:string,password:string){
+    login(username: string, password: string) {
         // 使用axios发送请求，但是在客户端无法使用
         console.log(2131231)
         // const axios = require('axios')
@@ -54,7 +56,7 @@ export default class LoginScript extends cc.Component {
         //     console.log(error)
         // })
     }
-    login2(){
+    login2() {
         // 请求获得数据
         cc.loader.load('http://localhost:5000/new_cursor', (err, res) => {
             if (err) {
@@ -65,28 +67,48 @@ export default class LoginScript extends cc.Component {
         });
 
     }
-    login3(username:string,password:string):void{
-        const url = 'http://localhost:5000/new_cursor';
-        const xhr = new XMLHttpRequest();
-        xhr.open('GET', url, true);
-    
-        // 设置请求头（Content-Type和其他需要的信息）
-        xhr.setRequestHeader('Content-Type', 'application/json');
-    
-        // 监听请求状态的变化
-        xhr.onreadystatechange = () => {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                console.log(xhr.responseText);
+    login3(username: string, password: string): void {
+        // const url = 'http://localhost:5000/login';
+        // const xhr = new XMLHttpRequest();
+        // xhr.open('POST', url, true);
+        // // 设置请求头（Content-Type和其他需要的信息）
+        // xhr.setRequestHeader('Content-Type', 'application/json');
+        // // 监听请求状态的变化
+        // xhr.onreadystatechange = () => {
+        //     if (xhr.readyState === 4 && xhr.status === 200) {
+        //         console.log(xhr.responseText);
+        //     }
+        // };
+        // // 发送请求
+        // const data = { 'username': username,'password':password };
+        // xhr.send(JSON.stringify(data));
+        Util.postRequest('http://localhost:5000/login', {
+            data: {
+                'username': username,
+                'password': password
+            },
+            headers: {
+                'Content-Type': 'application/json'
             }
-        };
-    
-        // 发送请求
-        const data = { 'username': username,'password':password };
-        xhr.send(JSON.stringify(data));
-    }
+        }).then(response => {
+            // console.log(response);
+            response = JSON.parse(response)
+            // console.log("----"+response.success)
+            if(response.success===true){
+                const token = "my_token";
+                cc.sys.localStorage.setItem('my_token',response.token);
+                cc.sys.localStorage.setItem('username',username)
+                cc.sys.localStorage.setItem('role',response.role)
+            }
+            cc.director.loadScene('MainMenuScene')
+        }).catch(error => {
+            console.error(error.message);
+            this.showErrorMessage("账号密码错误")
+        });
 
-    
-    registerButtonClick(){
+        // console.log("-------"+cc.sys.localStorage.getItem('my_token'))
+    }
+    registerButtonClick() {
         // window.open("http://www.baidu.com");
         // window.location.href = 'https://www.example.com';
         cc.sys.openURL('http://localhost:8080/register');

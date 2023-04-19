@@ -53,6 +53,19 @@ class User:
             return User(*result)
         else:
             return None
+    
+    @staticmethod
+    def get_by_id(user_id):
+        conn = mysql.connection
+        cursor = conn.cursor()
+        query = "SELECT * FROM my_account WHERE my_id = %s"
+        cursor.execute(query, (user_id,))
+        result = cursor.fetchone()
+        cursor.close()
+        if result:
+            return User(*result)
+        else:
+            return None
         
     @staticmethod
     def delete_by_id(user_id):
@@ -75,7 +88,7 @@ class UserInfo:
         conn = mysql.connection
         cursor = conn.cursor()
         if self.user_id:
-            query = "UPDATE my_user SET my_name = %s, my_username = %s, my_personal_info = %s WHERE user_id = %s"
+            query = "UPDATE my_user SET my_name = %s, my_username = %s, my_personal_info = %s WHERE my_id = %s"
             cursor.execute(query, (self.name, self.username, self.personal_info, self.user_id))
         else:
             query = "INSERT INTO my_user (my_name, my_username, my_personal_info) VALUES (%s, %s, %s)"
@@ -93,9 +106,18 @@ class UserInfo:
         result = cursor.fetchone()
         cursor.close()
         if result:
-            return User(*result)
+            return UserInfo(*result)
         else:
             return None
+    
+    @staticmethod
+    def delete_by_username(username):
+        conn = mysql.connection
+        cursor = conn.cursor()
+        query = "DELETE FROM my_user WHERE my_username = %s"
+        cursor.execute(query, (username,))
+        conn.commit()
+        cursor.close()
 
 class RankData:
     def __init__(self, username=None, name=None, personal_info=None, score=None):
@@ -114,12 +136,20 @@ class RankData:
 
         users = []
         for row in rows:
-            user = User(username=row[0], name=row[1], personal_info=row[2], score=row[3])
+            user = RankData(username=row[0], name=row[1], personal_info=row[2], score=row[3])
             users.append(user)
 
         cursor.close()
-
         return users
+
+    @staticmethod
+    def insert_score(username, score):
+        conn = mysql.connection
+        cursor = conn.cursor()
+        query = "INSERT INTO my_score (my_username, my_score) VALUES (%s, %s)"
+        cursor.execute(query, (username, score))
+        conn.commit()
+        cursor.close()
 
 class Role:
     def __init__(self, my_id=None, my_role_id=None, my_role_name=None):
@@ -164,3 +194,75 @@ class Role:
         cursor.execute(query, (my_id,))
         conn.commit()
         cursor.close()
+
+class Score:
+    def __init__(self, id, username, score):
+        self.id = id
+        self.username = username
+        self.score = score
+    @staticmethod
+    def get_all_users():
+        # 连接 MySQL 数据库
+        db = mysql.connection
+        cursor = db.cursor()
+
+        sql = "SELECT * FROM my_score"
+        cursor.execute(sql)
+
+        result = []
+        for row in cursor.fetchall():
+            score = Score(row[0], row[1], row[2])
+            result.append(score.__dict__)
+
+        cursor.close()
+        db.close()
+
+        return result
+    
+    @staticmethod
+    def delete_user(id):
+        # 连接 MySQL 数据库
+        db = mysql.connection
+        cursor = db.cursor()
+        sql = "DELETE FROM my_score WHERE my_id = %s"
+        val = (id,)
+        cursor.execute(sql, val)
+        db.commit()
+        cursor.close()
+        db.close()
+        return 'success'
+
+
+class AdminUserAccount:
+    def __init__(self,id,username,role_id,nickname,user_info) -> None:
+        self.id = id
+        self.username = username
+        self.role_id = role_id
+        self.nickname = nickname
+        self.user_info = user_info
+    
+    @staticmethod
+    def getAllData():
+        # assume we have a database connection object named "db"
+        db = mysql.connection
+        cursor = db.cursor()
+        
+        # execute the SQL query to join the my_account and my_user tables
+        query = """
+            SELECT my_account.my_id, my_account.my_username, my_account.my_role_id, 
+                   my_user.my_name, my_user.my_personal_info
+            FROM my_account
+            JOIN my_user ON my_account.my_username = my_user.my_username
+        """
+        cursor.execute(query)
+        
+        # fetch all results
+        results = cursor.fetchall()
+        
+        # create a list of AdminUserAccount objects from the results
+        accounts = []
+        for row in results:
+            account = AdminUserAccount(*row)
+            accounts.append(account)
+        
+        return accounts

@@ -25,8 +25,8 @@ export default class NewClass extends cc.Component {
         // 清除游戏状态
 
         // 停止所有计时器和动画
-        cc.director.getScheduler().unscheduleAll();
-        cc.director.getActionManager().removeAllActions();
+        // cc.director.getScheduler().unscheduleAll();
+        // cc.director.getActionManager().removeAllActions();
 
         // 重置游戏状态
         if(cc.director.isPaused()){

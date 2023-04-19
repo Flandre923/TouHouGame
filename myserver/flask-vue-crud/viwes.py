@@ -6,7 +6,7 @@ from flask import jsonify, request
 
 from app import app
 from config import Config
-from models import User,UserInfo,RankData,Role
+from models import User,UserInfo,RankData,Role,Score,AdminUserAccount
 
 from functools import wraps
 
@@ -31,6 +31,27 @@ def token_required(role=None):
         return decorated_function
     return decorator
 
+
+def token_required_2():
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            token = request.headers.get('Authorization')
+            # print(token)
+            if not token:
+                return jsonify({'error': 'Token missing'}), 401
+            try:
+                data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
+                if datetime.utcnow() > datetime.fromtimestamp(data['exp']):
+                    return jsonify({'error': 'Token expired'}), 401
+                if data['role'] is not None:
+                    return jsonify({'error': 'Authorization not enough'}), 401
+                return f(*args, **kwargs)
+            except Exception as e:
+                print(e)
+                return jsonify({'error': 'Invalid token'}), 401
+        return decorated_function
+    return decorator
 
 
 @app.route('/login', methods=['POST'])
@@ -69,7 +90,7 @@ def register():
     hashed_password = hashlib.sha256(password.encode('utf-8')).hexdigest()
 
     # 创建用户对象
-    user = User(username=username, password=hashed_password, role_id=1)
+    user = User(None,username=username, password=hashed_password, role_id=1)
 
     # 保存用户对象到数据库
     user.save()
@@ -121,10 +142,12 @@ def admin():
     return jsonify({'message': 'Hello, {}! This is an admin page.'.format(data['username'])})
 
 # 需要token验证的接口
-@app.route('/admin/users')
-@token_required(role=2)
+@app.route('/admin/users',methods = ['GET'])
+# @token_required(role=2)
 def admin_user():
-    user_list = User.get_all()
+    # user_list = User.get_all()
+    # users_dict = [user.__dict__ for user in user_list]
+    user_list = AdminUserAccount.getAllData();
     users_dict = [user.__dict__ for user in user_list]
     return jsonify(users_dict)
 
@@ -140,14 +163,19 @@ def admin_role():
 @token_required(role=2)
 def admin_user_update():
     post_data = request.get_json()
+    print(post_data)
     user_account = post_data.get('user_account')
     id  = user_account.get('id')
     username = user_account.get('username')
     role_id = user_account.get('role_id')
+    nickname = user_account.get('nickname')
+    user_info_data = user_account.get('user_info')
     user = User.get_by_username(username)
-    if user.role_id == role_id:
-        return jsonify({'message': 'Update successful'})
     user.update_role_id(role_id)
+    user_info = UserInfo.get_by_username(username)
+    user_info.name = nickname
+    user_info.personal_info = user_info_data
+    user_info.save()
     return jsonify({'message': 'Update successful'})
 
 @app.route('/admin/users/delete',methods=['GET'])
@@ -155,7 +183,9 @@ def admin_user_update():
 def admin_user_delete():
     user_id = request.args.get('id')
     print(user_id)
+    user = User.get_by_id(user_id)
     User.delete_by_id(user_id)
+    UserInfo.delete_by_username(user.username)
     return jsonify({'message': 'Delete successful'})
 
 
@@ -194,3 +224,27 @@ def admin_role_add():
     return jsonify({'message': 'Add successful'})
 
 
+@app.route('/admin/score', methods=['GET'])
+@token_required(role=2)
+def get_scores():
+    return jsonify({'message':'successful','data':Score.get_all_users()})
+
+@app.route('/admin/role/delete/<int:id>', methods=['DELETE'])
+@token_required(role=2)
+def delete_user(id):
+    return jsonify({'message':'successful','data':Score.delete_user(id)})
+
+
+@app.route('/admin/uploadRank', methods=['POST'])
+@token_required_2()
+def upload_rank():
+    # Get the username and score from the request data
+    data = request.get_json()
+    username = data['username']
+    score = data['score']
+
+    # Insert the score into the database using the RankData class
+    RankData.insert_score(username, score)
+
+    # Return a success message
+    return jsonify({'message': 'Score uploaded successfully.'})

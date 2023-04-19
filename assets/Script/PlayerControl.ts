@@ -1,8 +1,11 @@
 import BlueBulletControl from "./BlueBulletControl";
 import BulletControl from "./BulletControl";
+import EnemyManager from "./EnemyScript/EnemyManager";
 import SmallSpirit from "./EnemyScript/SmallSripit";
 import Input, { PlayerDirection } from "./Input";
 import MapBounds from "./MapBounds";
+import GameManger from "./UIScript/GameManager";
+import Util from "./Util/Util";
 
 const {ccclass, property} = cc._decorator;
 
@@ -37,6 +40,7 @@ export default class PlayerControl extends cc.Component {
     isInvincible:Boolean=false;
     // 受击无敌时间
     invincible_timer:number=0;
+    isAlive:boolean = true;
 
     start () {
     }
@@ -131,6 +135,17 @@ export default class PlayerControl extends cc.Component {
     // 人物死亡
     onDie(){
         // 写游戏结束相关的内容，游戏停止，当前用户的用户名，账号，成绩
+        // 上传分数
+        this.isAlive = false;
+        cc.game.pause();
+        if(cc.sys.localStorage.getItem('my_token')){
+            this.node.parent.parent.getComponent(GameManger).uploadRank(this.node.parent.parent.children[1].getComponent(EnemyManager).score)
+        }
+        let panelNode = cc.find("Canvas/PausePanel")
+        panelNode.position = this.node.position
+        panelNode.active = true
+        panelNode.children[2].children[0].active = false
+        // this.node.parent.parent.getComponent(GameManger).gameOver();
     }
     // 人物受到攻击
     onHit(damage:number):void{
@@ -140,7 +155,7 @@ export default class PlayerControl extends cc.Component {
         this.isInvincible = true; // 设置玩家的无敌状态为真
         this.invincible_timer = 2.0; // 启动计时器，设置剩余时间为5秒
         this.playerHp -= damage;
-        if(this.playerHp <= 0){
+        if(this.playerHp <= 0 && this.isAlive === true){
             this.onDie();
         }
     }
