@@ -1,3 +1,4 @@
+import DropItemManager from "../DropItemScript/DropItemMananger";
 import BulletPrefab from "./BulletScript/BulletPrefabs";
 import SmallJadeScript from "./BulletScript/SmallJadeScirpt";
 import { AbSpellCard } from "./CradScript/SpellCard";
@@ -27,6 +28,8 @@ export default class DaiyouseiScript extends cc.Component {
     ///
     private daiyouseiBulletNode:cc.Node;
     private move:(dt)=>void;
+    ///
+    dropManager:cc.Node
 
     // 符卡
     _spellCards: AbSpellCard[];
@@ -49,6 +52,8 @@ export default class DaiyouseiScript extends cc.Component {
         this._spellCardShotTimer = 0;
         // // 符卡初始化
         this._spellCards = [];
+        this.dropManager = this.node.parent.getComponent(EnemyManager).dropManager;
+        
         let bulletPrefabScript = this.node.parent.getComponent(EnemyManager).bulletManager.getComponent(BulletPrefab)
         let playerNode = this.node.parent.getComponent(EnemyManager).player
         let card1 = new AbSpellCard("[t]tttt", 500, [bulletPrefabScript.riceBulletPrefab]);
@@ -147,6 +152,12 @@ export default class DaiyouseiScript extends cc.Component {
         this.currentDown();
         this.node.destroy();
         this.node.parent.getComponent(EnemyManager).uiNodes[0].active = false;
+        if(this.dropManager == null){
+            console.log("----dropManager null")
+        }
+        else{
+            this.dropManager.getComponent(DropItemManager).genDropItem(this.node.name,this.node);
+        }
 
     }
 

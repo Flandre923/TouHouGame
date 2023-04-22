@@ -1,4 +1,5 @@
 import MapBounds from "../MapBounds";
+import DaiyouseiScript from "./DaiyouseiScript";
 import LingMengBoss from "./LingMengBoss";
 import SmallSpirit from "./SmallSripit";
 
@@ -9,6 +10,8 @@ export default class EnemyManager extends cc.Component {
     // 生成对象的预制体
     @property(cc.Prefab)
     smallSripit:cc.Prefab;
+    @property(cc.Prefab)
+    bigSripit:cc.Prefab;
     // 生成boss预制体
     @property({type:[cc.Prefab]})
     bossPrefab:cc.Prefab[] = [];
@@ -19,8 +22,9 @@ export default class EnemyManager extends cc.Component {
     player:cc.Node = null;
     // 弹幕预制体管理节点
     @property(cc.Node)
-    bulletManager:cc.Node = null;   
-
+    bulletManager:cc.Node = null;
+    @property(cc.Node)
+    dropManager:cc.Node = null;
     // 当前boss索引
     private currentBossIndex = 0;
 
@@ -29,19 +33,20 @@ export default class EnemyManager extends cc.Component {
     private readonly x0 = 8;
     private readonly k = 0.3;
 
-    // 怪物生成下限 ， boss生成波次 ， 玩家距离
+    // 怪物生成下限  ， 玩家距离
     private readonly monsterNumberFloor = 10;
     private readonly distance = 300;
     
     public score = 0; // 分数 
 
-    //
     private enemyCount: number[];   //每个索引对应的敌人数量
+    private rareEnemiesCount; // 生成的大妖精的数目
+    private rareEnemiesLimit;
     public currentIndex: number = 0;  //当前索引
 
     private timeInterval: number = 1; //生成敌人的时间间隔，单位为秒
     private timeSinceLastEnemy: number = 0; //距离上一个敌人生成已经过去的时间
-    public showEnemyNumber:number;
+    public showEnemyNumber:number; // 展示敌人的剩余数目
     // 敌人池
     enemyPool:cc.NodePool = new cc.NodePool;
     onLoad () {
@@ -56,23 +61,28 @@ export default class EnemyManager extends cc.Component {
             }
         }
         this.showEnemyNumber = this.enemyCount[0];
+        this.setRareEnemiesProperties(0);
     }
 
     update (dt) {
         //每隔一段时间就生成一只怪
         this.timeSinceLastEnemy += dt;
         if (this.timeSinceLastEnemy >= this.timeInterval) { //到达生成敌人的时间间隔
-            const remainingEnemies = this.enemyCount[this.currentIndex];
+            // const remainingEnemies = this.enemyCount[this.currentIndex];
             if (this.enemyCount[this.currentIndex] > 0) { //当前索引下还有剩余的敌人
                 if(this.currentIndex % 3 === 0 && this.currentIndex!==0){
                     this.generateBoss();
                 }else{
-                    this.generateMonster();
+                    if(!this.genRareEnemies(this.bigSripit,this.getRareEnemiesP())){
+                        this.generateMonster();
+                    }
+                    
                 }
                 this.enemyCount[this.currentIndex]--;
             } else if (this.noMoreEnemiesOnField()) { //当前索引下所有敌人已经生成完毕且场上没有其他敌人了
                 this.currentIndex++;
                 this.showEnemyNumber = this.enemyCount[this.currentIndex];
+                this.setRareEnemiesProperties(this.currentIndex)
             }
             this.timeSinceLastEnemy = 0; //重置计时器
         }
@@ -133,6 +143,30 @@ export default class EnemyManager extends cc.Component {
             this.score+=enemy.getComponent(SmallSpirit).score;
         };
         enemy.getComponent(SmallSpirit).init(this.player, this.enemyPool);
+    }
+    // 生成稀有敌人
+    genRareEnemies(prefab:cc.Prefab,rareProb:number){
+        if(this.rareEnemiesCount < this.rareEnemiesLimit && Math.random()*100 <= rareProb){
+            let enemy = cc.instantiate(prefab);
+            let {position, direction} = this.generateEnemyPositionAndDirection(this.player,this.distance);
+            enemy.setPosition(position);
+            this.node.addChild(enemy);
+            enemy.getComponent(DaiyouseiScript).currentDown = ()=>{
+                this.showEnemyNumber --;
+                this.score+=enemy.getComponent(DaiyouseiScript).score;
+            };
+            return true;
+        }
+        return false;
+    }
+    // 获得稀有敌人的生成概率
+    getRareEnemiesP(){
+        return this.rareEnemiesLimit/this.getMaxMonstersPerWave(this.currentIndex) * 100;
+    }
+    // 设置稀有敌人相关的属性
+    setRareEnemiesProperties(waveNum:number){
+        this.rareEnemiesLimit = Math.floor(this.getMaxMonstersPerWave(waveNum) / 5);
+        this.rareEnemiesCount = 0;
     }
     
     // 判断是否在地图内

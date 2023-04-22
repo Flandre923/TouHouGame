@@ -26,6 +26,16 @@ export default class DropItemMap {
                 { "item": "Ppoint", "weight": 100, "min_number": 3, "max_number": 6 },
                 { "item": "Bomb", "weight":6, "min_number": 1, "max_number": 1 },
                 { "item": "Hp", "weight": 10, "min_number": 1, "max_number": 1 },
+            ],
+            "LingMing_Boss":[
+                { "item": "Ppoint", "weight": 100, "min_number": 10, "max_number": 20 },
+                { "item": "Bomb", "weight":100, "min_number": 1, "max_number": 2 },
+                { "item": "Hp", "weight": 100, "min_number": 1, "max_number": 3 },
+            ]
+            "Daiyousei":[
+                { "item": "Ppoint", "weight": 100, "min_number": 5, "max_number": 10 },
+                { "item": "Bomb", "weight":30, "min_number": 1, "max_number": 1 },
+                { "item": "Hp", "weight": 20, "min_number": 1, "max_number": 1 },
             ]
         }
 

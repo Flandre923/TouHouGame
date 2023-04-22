@@ -17,7 +17,6 @@ export default class DropItemManager extends cc.Component {
             let weight = item.weight
             let min_number = item.min_number
             let max_number = item.max_number
-            // console.log(min_number,max_number)
             let numberCount = Math.floor(Math.random() * (max_number - min_number ))+ min_number;
             // if(!this.pitySystem[item['item']]){
             //     this.pitySystem[item['item']] = weight
@@ -49,7 +48,6 @@ export default class DropItemManager extends cc.Component {
         }
     }
     private genItem(numberCount: number, enemy: cc.Node, item: Record<string, string>) {
-        console.log("----"+numberCount)
         for (let i = 0; i < numberCount; i++) {
             let dropItemName = item['item']
             let dropItem = cc.instantiate(this.dropItemMap.ItemPrefabMap[dropItemName])
