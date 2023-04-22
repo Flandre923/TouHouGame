@@ -170,7 +170,7 @@ export default class PlayerControl extends cc.Component {
     }
     // 人物设置血量
     setHp(hp:number){
-        this.playerHp = hp;
+        this.playerHp += hp;
         if(this.playerHp > this.playerMaxHp){
             this.playerHp = this.playerMaxHp;
         }
@@ -181,7 +181,7 @@ export default class PlayerControl extends cc.Component {
     }
     // 人物设置技能使用次数
     setSpell(spell:number){
-        this.playerSpell = spell;
+        this.playerSpell += spell;
         if(this.playerSpell > this.playerMaxSpell){
             this.playerSpell = this.playerMaxSpell;
         }
@@ -278,7 +278,7 @@ export default class PlayerControl extends cc.Component {
     // 开始碰撞
     onBeginContact(contact, self, other) {
         if(other.node.name == "SmallSpirit"){
-            this.setHp(this.playerHp-other.node.getComponent(SmallSpirit).damage);
+            this.setHp(-other.node.getComponent(SmallSpirit).damage);
         }
     }
     // 碰撞结束

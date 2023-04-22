@@ -23,9 +23,9 @@ export default class DropItemMap {
 
         this.dropItemMap = {
             "SmallSpirit": [
-                { "item": "Ppoint", "weight": "100", "min_number": "3", "max_number": "6" },
-                { "item": "Bomb", "weight": "0.06", "min_number": "1", "max_number": "1" },
-                { "item": "Hp", "weight": "0.01", "min_number": "1", "max_number": "1" },
+                { "item": "Ppoint", "weight": 100, "min_number": 3, "max_number": 6 },
+                { "item": "Bomb", "weight":6, "min_number": 1, "max_number": 1 },
+                { "item": "Hp", "weight": 10, "min_number": 1, "max_number": 1 },
             ]
         }
 

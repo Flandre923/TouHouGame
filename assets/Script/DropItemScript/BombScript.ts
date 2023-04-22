@@ -1,28 +1,14 @@
-// Learn TypeScript:
-//  - https://docs.cocos.com/creator/2.4/manual/en/scripting/typescript.html
-// Learn Attribute:
-//  - https://docs.cocos.com/creator/2.4/manual/en/scripting/reference/attributes.html
-// Learn life-cycle callbacks:
-//  - https://docs.cocos.com/creator/2.4/manual/en/scripting/life-cycle-callbacks.html
+import PlayerControl from "../PlayerControl";
+import PPointScript from "./PPointScript";
 
 const {ccclass, property} = cc._decorator;
-
 @ccclass
-export default class NewClass extends cc.Component {
-
-    @property(cc.Label)
-    label: cc.Label = null;
-
+export default class BombScript extends PPointScript {
     @property
-    text: string = 'hello';
-
-    // LIFE-CYCLE CALLBACKS:
-
-    // onLoad () {}
-
-    start () {
-
+    spell = 1;
+    
+    onDie(other){
+        const playerControlScript = other.node.getComponent(PlayerControl)
+        playerControlScript.setSpell(this.spell);
     }
-
-    // update (dt) {}
 }

@@ -10,7 +10,7 @@ export class AbSpellCard{
     private _duration: number; // 持续时间
     private _bulletNumbers:Array<cc.Prefab>; // 使用弹幕预制体数组
     private _bulletCallback: (dt) => void; // 发射弹幕的回调函数
-
+    public _enemyMove:(dt)=>void;
     constructor(name:string,duration:number,bulletNumbers:Array<cc.Prefab>){
         this._name = name;
         this._duration = duration;

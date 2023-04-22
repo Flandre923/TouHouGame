@@ -148,6 +148,7 @@
     },
     "_enabled": true,
     "power": 1,
+    "lifeTime": 10,
     "_id": ""
   },
   {

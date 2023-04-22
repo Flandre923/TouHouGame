@@ -162,7 +162,7 @@ export default class LingMengBoss extends cc.Component {
                     ).normalizeSelf();
                     // 弹幕方向旋转
                     let a_angle = bulletComponent.direction.angle(cc.v2(1,0))
-                    bulletComponent.node.angle = -cc.misc.radiansToDegrees(a_angle);
+                    bulletComponent.node.angle = bulletComponent.node.angle - cc.misc.radiansToDegrees(a_angle);
                     // 设置弹幕的 move 方法
                     bulletComponent.move = (dt) => {
                         bulletNode.x += bulletComponent.direction.x * dt * bulletComponent.speed;

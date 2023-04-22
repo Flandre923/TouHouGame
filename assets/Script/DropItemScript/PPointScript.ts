@@ -26,16 +26,20 @@ export default class PPointScript extends cc.Component {
             }
         }
     }
+
     // 碰撞开始
     onBeginContact(contact, self, other) {
         if (other.node.name == "Player") {
-            // 玩家获得道具
-            other.node.getComponent(PlayerControl).setFire(this.power);
-            //当前节点销毁
-            this.node.destroy();
+            this.onDie(other);
+            //销毁节点
+            this.node.destroy()
         }
     }
-
     onEndContact(contact, self, other) {
+    }
+
+    onDie(other){
+        // 玩家获得道具
+        other.node.getComponent(PlayerControl).setFire(this.power);
     }
 }

@@ -1,3 +1,4 @@
+import DaiyouseiScript from "./EnemyScript/DaiyouseiScript";
 import LingMengBoss from "./EnemyScript/LingMengBoss";
 import SmallSpirit from "./EnemyScript/SmallSripit";
 import MapBounds from "./MapBounds";
@@ -84,6 +85,8 @@ export default class BulletControl extends cc.Component {
             other.node.getComponent(SmallSpirit).onHit(this.damage);
         }else if(other.node.name == "LingMing_Boss"){
             other.node.getComponent(LingMengBoss).onHit(this.damage);
+        }else if(other.node.name == "Daiyousei"){
+            other.node.getComponent(DaiyouseiScript).onHit(this.damage)
         }
 
         if(other.node.name != "Player"){

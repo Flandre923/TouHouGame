@@ -1,27 +1,16 @@
+import PlayerControl from "../PlayerControl";
+import PPointScript from "./PPointScript";
+
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class NewClass extends cc.Component {
-
-    @property(cc.Label)
-    label: cc.Label = null;
+export default class HpScript extends PPointScript {
 
     @property
-    text: string = 'hello';
+    hp = 1;
 
-    // LIFE-CYCLE CALLBACKS:
-
-    // onLoad () {}
-
-    start () {
-
-    }
-
-    // update (dt) {}
-
-    // 碰撞检测开始
-    onCollisionEnter(other, self) {
-        console.log("碰撞检测开始")
-        
+    onDie(other){
+        const playerControlScript = other.node.getComponent(PlayerControl)
+        playerControlScript.setHp(this.hp);
     }
 }
