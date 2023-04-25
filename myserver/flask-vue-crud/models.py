@@ -150,7 +150,27 @@ class RankData:
         cursor.execute(query, (username, score))
         conn.commit()
         cursor.close()
+    
+    @staticmethod
+    def update_score(username, score):
+        conn = mysql.connection
+        cursor = conn.cursor()
+        query = "UPDATE my_score SET my_score = %s WHERE my_username = %s"
+        cursor.execute(query, (score, username))
+        conn.commit()
+        cursor.close()
 
+    @staticmethod
+    def get_rank_by_username(username):
+        conn = mysql.connection
+        cursor = conn.cursor()
+        query = "SELECT my_user.my_username, my_user.my_name, my_user.my_personal_info, my_score.my_score FROM my_user, my_score WHERE my_user.my_username = my_score.my_username AND my_user.my_username = %s"
+        cursor.execute(query, (username,))
+        row = cursor.fetchone()
+        user = RankData(username=row[0], name=row[1], personal_info=row[2], score=row[3])
+        cursor.close()
+        return user
+    
 class Role:
     def __init__(self, my_id=None, my_role_id=None, my_role_name=None):
         self.my_id = my_id

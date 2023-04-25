@@ -160,7 +160,7 @@ export default class PlayerControl extends cc.Component {
     onHit(damage:number):void{
         if (this.isInvincible) {
             return; // 如果玩家已经处于无敌状态，则不执行任何操作
-          }
+        }
         this.isInvincible = true; // 设置玩家的无敌状态为真
         this.invincible_timer = 2.0; // 启动计时器，设置剩余时间为5秒
         this.playerHp -= damage;

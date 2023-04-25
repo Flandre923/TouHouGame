@@ -49,6 +49,7 @@ export default class Util {
                         resolve(xhr.responseText);
                     } else {
                         reject(new Error(`Request failed with status ${xhr.status}`));
+                        console.log(xhr.responseText)
                     }
                 }
             };

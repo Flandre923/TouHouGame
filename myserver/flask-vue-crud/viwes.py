@@ -44,7 +44,7 @@ def token_required_2():
                 data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
                 if datetime.utcnow() > datetime.fromtimestamp(data['exp']):
                     return jsonify({'error': 'Token expired'}), 401
-                if data['role'] is not None:
+                if data['role'] is None:
                     return jsonify({'error': 'Authorization not enough'}), 401
                 return f(*args, **kwargs)
             except Exception as e:
@@ -240,11 +240,15 @@ def delete_user(id):
 def upload_rank():
     # Get the username and score from the request data
     data = request.get_json()
+    print(data)
     username = data['username']
     score = data['score']
-
+    rankUser = RankData.get_rank_by_username(username)
+    if rankUser is not None and rankUser.score < score:
+        RankData.update_score(username,score)
     # Insert the score into the database using the RankData class
-    RankData.insert_score(username, score)
+    else:
+        RankData.insert_score(username, score)
 
     # Return a success message
     return jsonify({'message': 'Score uploaded successfully.'})
