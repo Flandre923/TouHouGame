@@ -72,6 +72,7 @@ export default class EnemyManager extends cc.Component {
             if (this.enemyCount[this.currentIndex] > 0) { //当前索引下还有剩余的敌人
                 if(this.currentIndex % 3 === 0 && this.currentIndex!==0){
                     this.generateBoss();
+                    // this.generateMonster();
                 }else{
                     if(!this.genRareEnemies(this.bigSripit,this.getRareEnemiesP())){
                         this.generateMonster();
