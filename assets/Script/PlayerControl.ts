@@ -203,7 +203,7 @@ export default class PlayerControl extends cc.Component {
     getPlayerRadius(){
         return  this.node.width / 2;
     }
-
+    // 计算射击弹幕的发射方向
     compteShotDirection () {
         let playerPos = this.node.convertToWorldSpaceAR(cc.Vec2.ZERO);
         // 计算玩家到鼠标的方向向量（归一化）
