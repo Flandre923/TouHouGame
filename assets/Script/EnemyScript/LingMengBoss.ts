@@ -57,8 +57,8 @@ export default class LingMengBoss extends cc.Component {
         this.dropManager = this.node.parent.getComponent(EnemyManager).dropManager;
         let bulletPrefabScript = this.node.parent.getComponent(EnemyManager).bulletManager.getComponent(BulletPrefab)
         let playerNode = this.node.parent.getComponent(EnemyManager).player
-        let card1 = new AbSpellCard("[想起]户隐山之投", 5, [bulletPrefabScript.bigJadePrefab, bulletPrefabScript.mediumJadePrefab, bulletPrefabScript.smallJadePrefab]);
-        let card2 = new AbSpellCard("[境界]波与粒的境界", 100, [bulletPrefabScript.riceBulletPrefab,bulletPrefabScript.arrowBulletPrefab]);
+        let card1 = new AbSpellCard("[想起]户隐山之投", 80, [bulletPrefabScript.bigJadePrefab, bulletPrefabScript.mediumJadePrefab, bulletPrefabScript.smallJadePrefab]);
+        let card2 = new AbSpellCard("[境界]波与粒的境界", 80, [bulletPrefabScript.riceBulletPrefab,bulletPrefabScript.arrowBulletPrefab]);
         let bulletNumbers = card1.bulletNumbers
         // this._bulletNodes = []; // 清空当前生成的所有弹幕节点
         card1.bulletCallback = (dt) => {
