@@ -125,7 +125,7 @@
       "__id__": 1
     },
     "_enabled": true,
-    "speed": 64,
+    "speed": 75,
     "bulletPrefab": {
       "__uuid__": "f08e544f-0172-400e-b8e9-b6e5cc7b0b76"
     },
@@ -201,8 +201,8 @@
     "body": null,
     "_offset": {
       "__type__": "cc.Vec2",
-      "x": 0,
-      "y": 0
+      "x": 0.2,
+      "y": 2.5
     },
     "_radius": 4.400000000000002,
     "_id": ""

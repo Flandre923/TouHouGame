@@ -1,3 +1,5 @@
+import GameManger from "../GameManager";
+
 const {ccclass, property} = cc._decorator;
 
 @ccclass
@@ -30,17 +32,27 @@ export default class GameOverPenalScript extends cc.Component {
 
     onEndButtonClick() {
         //
-        const enemyBulletManager = cc.find('Canvas/map/对象层 1/EnemyBulletManager');
-        if (enemyBulletManager) {
-            enemyBulletManager.children.forEach(child => {
-                child.removeFromParent();
-                child.destroy();
-            });
-        }
+        const mapNode = cc.find('Canvas/map/对象层 1');
+        mapNode.children.forEach(child => {
+            child.destroyAllChildren()
+        })
         // 退出游戏并返回到主菜单
         cc.director.loadScene('MainMenuScene');
-        // 是否是人物死亡，若是不存档，否则就存档 上传分数
+        
+        // 存档
+        this.saveGame()
     }
 
+    saveGame(){
+        //通过GameManager获得SaveData
+        let gameManager = cc.find("Canvas/map/对象层 1");
+        let saveData = gameManager.getComponent(GameManger).getSaveData()
+        // 将SaveData保存到浏览器中
+        console.log(JSON.stringify(saveData))
+        cc.sys.localStorage.setItem("saveData", JSON.stringify(saveData));
+        cc.director.getScene()
+    }
 
+    // 递归删除节点下所有的子节点
 }
+

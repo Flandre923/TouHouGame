@@ -1,3 +1,7 @@
+import PlayerControl from "../../PlayerControl";
+import GameManger from "../GameManager";
+import SaveData from "../SaveData";
+
 const {ccclass, property} = cc._decorator;
 @ccclass
 export default class NewClass extends cc.Component {
@@ -38,7 +42,18 @@ export default class NewClass extends cc.Component {
     }
     //load button
     onLoadButtonClick(){
-        // game load 
+        // game load
+        cc.director.loadScene('MainScene',()=>{
+            this.loadFromSave()
+            // 获得playerManager 
+            let playerManagerNode = cc.find("Canvas/map/对象层 1/PlayerManager")
+            // 在playerManager下面获得产生playerNode
+            // 加载玩家prefab
+            cc.loader.loadRes("Prefab/Player", cc.Prefab, (err, prefab) => {
+                playerManagerNode.addChild(cc.instantiate(prefab))
+            })
+
+        })
     }
 
     // rank button
@@ -53,4 +68,20 @@ export default class NewClass extends cc.Component {
         cc.game.end()
     }
 
+
+    loadFromSave(){
+        // 从本地的浏览器中读取saveData的json数据并转化为SaveData对象
+        let saveDataJson = cc.sys.localStorage.getItem("saveData")
+        let saveData:SaveData= JSON.parse(saveDataJson)
+        console.log(saveDataJson)
+        console.log(saveData.playerHp)
+        // 通过GameManager设置游戏的属性。
+        let gameManagerComponent = cc.find("Canvas/map/对象层 1").getComponent(GameManger);
+        if (saveData){
+            gameManagerComponent.setSaveData(saveData)
+        }else{
+            this.start()
+        }
+
+    }
 }

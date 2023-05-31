@@ -1,4 +1,7 @@
+import EnemyManager from "../EnemyScript/EnemyManager";
+import PlayerControl from "../PlayerControl";
 import Util from "../Util/Util";
+import SaveData from "./SaveData";
 
 const {ccclass, property} = cc._decorator;
 
@@ -27,5 +30,26 @@ export default class GameManger extends cc.Component {
         }).catch((err)=>{
             console.log(err.message)
         })
+    }
+    // 获得saveData
+    getSaveData():SaveData{
+        // 获得玩家节点
+        let  playerNode= this.node.children[0].children[0].getComponent(PlayerControl)
+        let gameMangerNode = this.node.children[1].getComponent(EnemyManager)
+        // 获得GameManager节点
+        playerNode.playerHp
+        return new SaveData(playerNode.playerHp,playerNode.playerSpell,playerNode.playerShotFire,gameMangerNode.currentIndex);
+    }
+
+    setSaveData(saveData:SaveData){
+        // 获得玩家节点
+        let  playerNode= this.node.children[0].children[0].getComponent(PlayerControl)
+        let gameMangerNode = this.node.children[1].getComponent(EnemyManager)
+
+        playerNode.playerHp = saveData.playerHp
+        playerNode.playerSpell = saveData.playerSpell
+        playerNode.playerShotFire = saveData.playerShotFire
+
+        gameMangerNode.currentIndex = saveData.currentIndex
     }
 }
