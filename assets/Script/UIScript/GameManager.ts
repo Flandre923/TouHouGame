@@ -51,5 +51,6 @@ export default class GameManger extends cc.Component {
         playerNode.playerShotFire = saveData.playerShotFire
 
         gameMangerNode.currentIndex = saveData.currentIndex
+        // gameMangerNode.setCurrentEnemyCount(saveData.currentIndex)
     }
 }

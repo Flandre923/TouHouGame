@@ -151,6 +151,7 @@ export default class DaiyouseiScript extends cc.Component {
         this.deleteGenBullet()
         this.currentDown();
         this.node.destroy();
+        // 血条显示
         this.node.parent.getComponent(EnemyManager).uiNodes[0].active = false;
         if(this.dropManager == null){
             console.log("----dropManager null")

@@ -73,7 +73,7 @@ export default class LingMengBoss extends cc.Component {
                 const bulletNode = cc.instantiate(bigJadePrefab); // 创建大玉弹幕节点
                 bulletNode.position = this.node.position; // 设置弹幕位置为自机位置
                 bulletNode.parent = this.node.parent.parent.getChildByName("EnemyBulletManager"); // 将弹幕节点添加到弹幕管理节点
-                this._bulletNodes.push(bulletNode); // 将弹幕节点添加到数组中
+               //this._bulletNodes.push(bulletNode); // 将弹幕节点添加到数组中
                 const bulletComponent = bulletNode.getComponent(SmallJadeScript); // 获取弹幕组件
 
                 // 设置弹幕移动速度和方向
@@ -96,7 +96,7 @@ export default class LingMengBoss extends cc.Component {
                 const bulletNode = cc.instantiate(mediumJadePrefab); // 创建中玉弹幕节点
                 bulletNode.position = this.node.position; // 设置弹幕位置为自机位置
                 bulletNode.parent = this.node.parent.parent.getChildByName("EnemyBulletManager");
-                this._bulletNodes.push(bulletNode); // 将弹幕节点添加到数组中
+               // this._bulletNodes.push(bulletNode); // 将弹幕节点添加到数组中
                 const bulletComponent = bulletNode.getComponent(SmallJadeScript); // 获取弹幕组件
 
                 // 设置弹幕移动速度和方向
@@ -119,7 +119,7 @@ export default class LingMengBoss extends cc.Component {
                 const bulletNode = cc.instantiate(smallJadePrefab); // 创建小玉弹幕节点
                 bulletNode.setPosition(enemyPosition.add(cc.v2(Math.random() * 25 - 12, Math.random() * 25 - 12))); // 计算弹幕位置
                 bulletNode.parent = this.node.parent.parent.getChildByName("EnemyBulletManager");
-                this._bulletNodes.push(bulletNode); // 将弹幕节点添加到数组中
+               // this._bulletNodes.push(bulletNode); // 将弹幕节点添加到数组中
                 const bulletComponent = bulletNode.getComponent(SmallJadeScript); // 获取小玉组件
                 // 设置弹幕移动速度和方向
                 bulletComponent.speed = 50 + 5 * i;
@@ -150,7 +150,7 @@ export default class LingMengBoss extends cc.Component {
                         const bulletNode = cc.instantiate(arrowBulletPrefab); // 创建箭头
                         bulletNode.setPosition(this.node.getPosition()); // 计算弹幕位置
                         bulletNode.parent = this.node.parent.parent.getChildByName("EnemyBulletManager");
-                        this._bulletNodes.push(bulletNode); // 将弹幕节点添加到数组中
+                       // this._bulletNodes.push(bulletNode); // 将弹幕节点添加到数组中
                         const bulletComponent = bulletNode.getComponent(SmallJadeScript); // 获取小玉组件
                         // 设置弹幕移动速度和方向
                         bulletComponent.speed = 100;

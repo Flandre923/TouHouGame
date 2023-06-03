@@ -169,7 +169,7 @@ export default class EnemyManager extends cc.Component {
         this.rareEnemiesLimit = Math.floor(this.getMaxMonstersPerWave(waveNum) / 5);
         this.rareEnemiesCount = 0;
     }
-    
+
     // 判断是否在地图内
     isInMap(position: cc.Vec2, mapSize: Array<number>): cc.Vec2 {
         if (position.x <= mapSize[2] ) {

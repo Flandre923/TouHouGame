@@ -16,9 +16,9 @@ export default class PlayerControl extends cc.Component {
     @property(cc.Integer)
     private speed:number = 150
     // 人物血量
-    playerHp:number = 2
+    playerHp:number = 20
     // 人物最大血量
-    playerMaxHp:number = 10
+    playerMaxHp:number = 20
     // 人物最大的可以使用技能次数
     playerSpell = 0
     playerMaxSpell = 10
