@@ -1,0 +1,31 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "PlayerRightWalk",
+  "_objFlags": 0,
+  "_native": "",
+  "_duration": 1,
+  "sample": 2,
+  "speed": 1,
+  "wrapMode": 1,
+  "curveData": {
+    "comps": {
+      "cc.Sprite": {
+        "spriteFrame": [
+          {
+            "frame": 0,
+            "value": {
+              "__uuid__": "076c6157-7840-46ca-90f1-01a9938d3c1e"
+            }
+          },
+          {
+            "frame": 0.5,
+            "value": {
+              "__uuid__": "204701ab-2ec1-4e69-9ba0-473aa52154fa"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "events": []
+}

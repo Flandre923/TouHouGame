@@ -39,6 +39,29 @@ node_modules/
 .DS_Store
 ehthumbs.db
 Thumbs.db
+/myserver/flask-vue-crud/client/node_modules
+/myserver/flask-vue-crud/client/dist
+/myserver/flask-vue-crud/env
+
+# local env files
+/myserver/flask-vue-crud/client/.env.local
+/myserver/flask-vue-crud/client/.env.*.local
+
+# Log files
+/myserver/flask-vue-crud/client/npm-debug.log*
+/myserver/flask-vue-crud/client/yarn-debug.log*
+/myserver/flask-vue-crud/client/yarn-error.log*
+/myserver/flask-vue-crud/client/pnpm-debug.log*
+
+# Editor directories and files
+/myserver/flask-vue-crud/client/.idea
+/myserver/flask-vue-crud/client/.vscode
+/myserver/flask-vue-crud/client/*.suo
+/myserver/flask-vue-crud/client/*.ntvs*
+/myserver/flask-vue-crud/client/*.njsproj
+/myserver/flask-vue-crud/client/*.sln
+/myserver/flask-vue-crud/client/*.sw?
+
 
 #/////////////////////////////////////////////////////////////////////////////
 # WebStorm files

@@ -2,9 +2,9 @@ const {ccclass, property} = cc._decorator;
 
 @ccclass
 export default class MapControl extends cc.Component {
-    map:cc.TiledMap|null=null;
-    @property(cc.Node)
-    player:cc.Node|null = null;
+    // map:cc.TiledMap|null=null;
+    // @property(cc.Node)
+    // player:cc.Node|null = null;
 
 
     start () {
@@ -32,10 +32,6 @@ export default class MapControl extends cc.Component {
     }
 
     update(dt){
-        if(this.player != null){
-            cc.Camera.main.node.x = this.player.x +300;
-            cc.Camera.main.node.y = this.player.y +300;
-        }
     }
 
 }

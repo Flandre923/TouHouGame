@@ -24,10 +24,19 @@
       },
       {
         "__id__": 3
+      },
+      {
+        "__id__": 4
+      },
+      {
+        "__id__": 5
+      },
+      {
+        "__id__": 6
       }
     ],
     "_prefab": {
-      "__id__": 4
+      "__id__": 7
     },
     "_opacity": 255,
     "_color": {
@@ -116,10 +125,86 @@
       "__id__": 1
     },
     "_enabled": true,
-    "speed": 64,
+    "speed": 75,
     "bulletPrefab": {
       "__uuid__": "f08e544f-0172-400e-b8e9-b6e5cc7b0b76"
     },
+    "BlueBulletPrefab": {
+      "__uuid__": "acc68daf-d476-431a-807e-4c6807899139"
+    },
+    "_id": ""
+  },
+  {
+    "__type__": "cc.Animation",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 1
+    },
+    "_enabled": true,
+    "_defaultClip": null,
+    "_clips": [
+      {
+        "__uuid__": "bf4ebc64-fcd9-424d-9349-0b966c3989c9"
+      },
+      {
+        "__uuid__": "e5ddb9d0-5efd-4b67-8498-b92f1e2a29ea"
+      },
+      {
+        "__uuid__": "7f8af566-7ec4-4411-bde4-d884d400ff4b"
+      },
+      {
+        "__uuid__": "d982ebf3-5f4e-494a-95b1-047bb98e5c3e"
+      }
+    ],
+    "playOnLoad": false,
+    "_id": ""
+  },
+  {
+    "__type__": "cc.RigidBody",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 1
+    },
+    "_enabled": true,
+    "_type": 2,
+    "_allowSleep": true,
+    "_gravityScale": 0,
+    "_linearDamping": 0,
+    "_angularDamping": 0,
+    "_linearVelocity": {
+      "__type__": "cc.Vec2",
+      "x": 0,
+      "y": 0
+    },
+    "_angularVelocity": 0,
+    "_fixedRotation": true,
+    "enabledContactListener": true,
+    "bullet": false,
+    "awakeOnLoad": true,
+    "_id": ""
+  },
+  {
+    "__type__": "cc.PhysicsCircleCollider",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 1
+    },
+    "_enabled": true,
+    "tag": 0,
+    "_density": 1,
+    "_sensor": false,
+    "_friction": 0.2,
+    "_restitution": 0,
+    "body": null,
+    "_offset": {
+      "__type__": "cc.Vec2",
+      "x": 0.2,
+      "y": 2.5
+    },
+    "_radius": 4.400000000000002,
     "_id": ""
   },
   {

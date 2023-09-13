@@ -1,0 +1,31 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "PlayerUpWalk",
+  "_objFlags": 0,
+  "_native": "",
+  "_duration": 1,
+  "sample": 2,
+  "speed": 1,
+  "wrapMode": 1,
+  "curveData": {
+    "comps": {
+      "cc.Sprite": {
+        "spriteFrame": [
+          {
+            "frame": 0,
+            "value": {
+              "__uuid__": "ca7e80fd-89a3-4df0-93ca-35ba15027375"
+            }
+          },
+          {
+            "frame": 0.5,
+            "value": {
+              "__uuid__": "9a38f905-be90-4423-a7ed-26d983e54b09"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "events": []
+}
